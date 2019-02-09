@@ -24,6 +24,38 @@ module Rb5
     class_option :skip_rspec, type: :boolean, default: false,
                               desc: 'Skip rspec files'
 
+    def finish_template
+      invoke :customization
+      super
+    end
+
+    def customization
+      invoke :setup_development_environment
+      invoke :configure_app
+      invoke :setup_dotfiles
+      invoke :setup_default_directories
+    end
+
+    def setup_development_environment
+      say 'Setting up the development environment'
+      build :configure_quiet_assets
+      # TODO: Add setup script
+    end
+
+    def configure_app
+      say 'Configuring app'
+      # TODO: Configure ActionMailer
+      build :setup_rack_mini_profiler
+    end
+
+    def setup_dotfiles
+      build :copy_dotfiles
+    end
+
+    def setup_default_directories
+      build :setup_default_directories
+    end
+
     def depends_on_system_test?
       !(options[:skip_system_test] || options[:skip_rspec] || options[:api])
     end

@@ -14,5 +14,55 @@ module Rb5
     def gemfile
       template 'Gemfile.erb', 'Gemfile'
     end
+
+    def configure_quiet_assets
+      config = <<-RUBY
+    config.assets.quiet = true
+      RUBY
+
+      inject_into_class 'config/application.rb', 'Application', config
+    end
+
+    # rubocop:disable Metrics/MethodLength
+    def configure_generators
+      config = <<-RUBY
+    config.generators do |generate|
+      generate.helper false
+      generate.javascripts false
+      generate.request_specs false
+      generate.routing_specs false
+      generate.stylesheets false
+      generate.test_framework :rspec
+      generate.view_specs false
+    end
+      RUBY
+
+      inject_into_class 'config/application.rb', 'Application', config
+    end
+
+    def setup_default_directories
+      [
+        'spec/lib',
+        'spec/controllers',
+        'spec/helpers',
+        'spec/support/matchers',
+        'spec/support/mixins',
+        'spec/support/shared_examples'
+      ].each do |dir|
+        empty_directory_with_keep_file dir
+      end
+    end
+    # rubocop:enable Metrics/MethodLength
+
+    def setup_rack_mini_profiler
+      copy_file(
+        'rack_mini_profiler.rb',
+        'config/initializers/rack_mini_profiler.rb'
+      )
+    end
+
+    def copy_dotfiles
+      directory('dotfiles', '.')
+    end
   end
 end
