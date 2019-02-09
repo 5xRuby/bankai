@@ -18,8 +18,26 @@ module Rb5
     class_option :skip_coffee, type: :boolean, default: true,
                                desc: "Don't use CoffeeScript"
 
+    class_option :skip_capistrano, type: :boolean, default: false,
+                                   desc: "Don't use Capistrano"
+
+    class_option :skip_rspec, type: :boolean, default: false,
+                              desc: 'Skip rspec files'
+
+    def depends_on_system_test?
+      !(options[:skip_system_test] || options[:skip_rspec] || options[:api])
+    end
+
     def self.banner
       "rb5 #{arguments.map(&:usage).join(' ')} [options]"
     end
+
+    protected
+
+    # rubocop:disable Naming/AccessorMethodName
+    def get_builder_class
+      Rb5::Builder
+    end
+    # rubocop:enable Naming/AccessorMethodName
   end
 end
