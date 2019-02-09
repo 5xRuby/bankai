@@ -40,7 +40,7 @@ group :development, :test do
 
   gem 'brakeman', require: false
   gem 'bundler-audit', '~> 0.6.0', require: false
-  gem 'rubocop', '~> 0.60.0', require: false
+  gem 'rubocop', '~> <%= Rb5::RUBOCOP_VERSION %>', require: false
 
   gem 'rack-mini-profiler', require: false
 
@@ -81,7 +81,7 @@ group :development do
 <% end -%>
 
 <% unless options[:skip_capistrano] -%>
-  gem 'capistrano', '3.11.0'
+  gem 'capistrano', '<%= Rb5::CAPISTRANO_VERSION %>'
   gem 'capistrano-bundler'
   gem 'capistrano-rails'
   # gem 'capistrano-sidekiq'

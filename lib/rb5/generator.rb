@@ -71,6 +71,7 @@ module Rb5
       generate('rb5:json')
       generate('rb5:db_optimizations')
       generate('rb5:mailer')
+      generate('rb5:deploy') unless options[:skip_capistrano]
       generate('rb5:lint')
     end
 
