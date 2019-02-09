@@ -70,6 +70,7 @@ module Rb5
       generate('rb5:ci')
       generate('rb5:json')
       generate('rb5:db_optimizations')
+      generate('rb5:mailer')
       generate('rb5:lint')
     end
 
