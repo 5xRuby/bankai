@@ -69,6 +69,7 @@ module Rb5
       generate('rb5:testing') unless options[:skip_rspec]
       generate('rb5:ci')
       generate('rb5:json')
+      generate('rb5:db_optimizations')
       generate('rb5:lint')
     end
 
