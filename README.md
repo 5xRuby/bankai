@@ -42,7 +42,7 @@ rb5 projectname
 * [Faker](https://github.com/stympy/faker)
 * [Rspec](https://github.com/rspec/rspec)
 * [Shoulda Matchers](https://github.com/thoughtbot/shoulda-matchers)
-* [Simplecov](https://github.com/colszowka/simplecov)
+* [Simplecov](https://github.com/colszowka/simplecov) - Enable with `COVERAGE=1`
 
 ## Others
 
