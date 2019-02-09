@@ -50,6 +50,7 @@ module Rb5
       say 'Setting up the development environment'
       build :configure_quiet_assets
       build :configure_generators
+      build :clear_seed_file
       # TODO: Add setup script
     end
 
@@ -67,6 +68,8 @@ module Rb5
       run('spring stop')
       generate('rb5:testing') unless options[:skip_rspec]
       generate('rb5:ci')
+      generate('rb5:json')
+      generate('rb5:lint')
     end
 
     def setup_default_directories

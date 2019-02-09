@@ -1,0 +1,37 @@
+AllCops:
+  TargetRubyVersion: <%= RUBY_VERSION %>
+  DisplayCopNames: true
+  Exclude:
+    - bin/*
+    - vendor/ruby/**/*
+    - node_modules/**/*
+    - db/schema.rb
+    - .licenses/**/*
+Rails:
+  Enabled: true
+Rails/UnknownEnv:
+  Environments:
+    - production
+    - staging
+    - development
+    - test
+Metrics:
+  Exclude:
+    - db/migrate/*
+    - Rakefile
+    - Gemfile
+    - config/**/*
+    - spec/**/*
+    - lib/tasks/**/*
+Layout:
+  Exclude:
+    - config/environments/*
+Style:
+  Exclude:
+    - spec/*_helper.rb
+Style/BlockComments:
+  Exclude:
+    - config/**/*
+    - spec/**/*
+Style/Documentation:
+  Enabled: false
