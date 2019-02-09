@@ -24,21 +24,32 @@ module Rb5
     class_option :skip_rspec, type: :boolean, default: false,
                               desc: 'Skip rspec files'
 
+    class_option :path, type: :string, default: nil,
+                        desc: 'Path to the gem'
+
     def finish_template
       invoke :customization
       super
     end
 
     def customization
+      invoke :customize_gemfile
       invoke :setup_development_environment
       invoke :configure_app
       invoke :setup_dotfiles
+      invoke :generate_default
       invoke :setup_default_directories
+    end
+
+    def customize_gemfile
+      build :replace_gemfile, options[:path]
+      bundle_command 'install'
     end
 
     def setup_development_environment
       say 'Setting up the development environment'
       build :configure_quiet_assets
+      build :configure_generators
       # TODO: Add setup script
     end
 
@@ -50,6 +61,11 @@ module Rb5
 
     def setup_dotfiles
       build :copy_dotfiles
+    end
+
+    def generate_default
+      run('spring stop')
+      generate('rb5:testing') unless options[:skip_rspec]
     end
 
     def setup_default_directories

@@ -15,6 +15,16 @@ module Rb5
       template 'Gemfile.erb', 'Gemfile'
     end
 
+    def replace_gemfile(path)
+      template 'Gemfile.erb', 'Gemfile', force: true do |content|
+        if path
+          content.gsub(/gem .rb5./) { |s| %(#{s}, path: "#{path}") }
+        else
+          content
+        end
+      end
+    end
+
     def configure_quiet_assets
       config = <<-RUBY
     config.assets.quiet = true
