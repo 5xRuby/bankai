@@ -66,6 +66,7 @@ module Rb5
     def generate_default
       run('spring stop')
       generate('rb5:testing') unless options[:skip_rspec]
+      generate('rb5:ci')
     end
 
     def setup_default_directories

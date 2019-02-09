@@ -1,0 +1,74 @@
+image: ruby:<%= RUBY_VERSION %>
+
+variables:
+  RAILS_ENV: test
+  NODE_VERSION: 8.0.0
+<%- if pg? -%>
+  POSTGRES_DB: <%= app_name %>
+  DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/$POSTGRES_DB"
+<%- end -%>
+<%- if mysql? -%>
+  MYSQL_DATABASE: <%= app_name %>
+  MYSQL_USER: <%= app_name %>
+  MYSQL_PASSWORD: <%= app_name %>
+  MYSQL_RANDOM_ROOT_PASSWORD: "true"
+  DATABASE_URL: "mysql2://$MYSQL_USER:$MYSQL_PASSWORD@mysql:3306/$MYSQL_DATABASE"
+<%- end -%>
+
+stages:
+  - lint
+  - test
+  - deploy
+
+cache:
+  paths:
+    - vendor/ruby
+
+rubocop:
+  stage: lint
+  before_script:
+    - gem install rubocop -v 0.60.0
+  script:
+    - rubocop
+
+brakeman:
+  stage: lint
+  before_script:
+    - export LANG=C.UTF-8
+    - export LC_ALL=C.UTF-8
+    - gem install brakeman
+  script:
+    - brakeman
+
+rspec:
+  stage: test
+  before_script:
+    - curl -SLO https://nodejs.org/dist/v$NODE_VERSION/node-v${NODE_VERSION}-linux-x64.tar.xz && tar -xJf node-v${NODE_VERSION}-linux-x64.tar.xz -C /usr/local --strip-components=1;
+    - curl -o- -L https://yarnpkg.com/install.sh | bash
+    - export PATH=$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH
+    - bundle install --without development --path vendor
+    - yarn install
+    - bin/webpack
+  services:
+<%- if pg? -%>
+    - postgres:9.6
+<%- end -%>
+<%- if mysql? -%>
+    - name: mysql:5.7
+      command: ['mysqld', '--character-set-server=utf8', '--collation-server=utf8_unicode_ci']
+<%- end -%>
+  script:
+    - bundle exec rake db:migrate
+    - bundle exec rspec
+
+# staging:deploy:
+#   stage: deploy
+#   before_script:
+#     - which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
+#     - eval $(ssh-agent -s)
+#     - ssh-add <(echo -e "$SSH_PRIVATE_KEY")
+#     - bundle install --path vendor
+#   script:
+#     - bundle exec cap staging deploy
+#   only:
+#     - master
