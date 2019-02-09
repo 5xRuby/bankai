@@ -1,28 +1,53 @@
-# Rb5
+Ruby5x
+===
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/rb5`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+This gem is inspired by [Suspenders](https://github.com/thoughtbot/suspenders) for [5xRuby](https://5xruby.tw) to bootstrap a rails project.
 
 ## Installation
 
-Add this line to your application's Gemfile:
+First, install rb5
 
-```ruby
-gem 'rb5'
+```
+gem install rb5
 ```
 
-And then execute:
+The bootstrap your rails project
 
-    $ bundle
+```
+rb5 projectname
+```
 
-Or install it yourself as:
+## Gemfile
 
-    $ gem install rb5
+* [Oj](http://www.ohler.com/oj/)
 
-## Usage
+### Development
 
-TODO: Write usage instructions here
+* [Brakeman](https://github.com/presidentbeef/brakeman)
+* [Bundler Audit](https://github.com/rubysec/bundler-audit)
+* [Rubocop](https://github.com/bbatsov/rubocop)
+* [Rack Mini Profiler](https://github.com/MiniProfiler/rack-mini-profiler) - Enable with `RACK_MINI_PROFILER=1`
+* [Annotate](https://github.com/ctran/annotate_models)
+* [Bullet](https://github.com/flyerhzm/bullet)
+* [Dotenv](https://github.com/bkeepers/dotenv)
+* [Letter Opener](https://github.com/ryanb/letter_opener)
+* [Overcommit](https://github.com/brigade/overcommit)
+* [Pry Rails](https://github.com/rweng/pry-rails)
+
+### Test
+
+* [Capybara](https://github.com/jnicklas/capybara)
+* [Google Chromedriver](https://sites.google.com/a/chromium.org/chromedriver/home)
+* [Factory Bot](https://github.com/thoughtbot/factory_bot)
+* [Faker](https://github.com/stympy/faker)
+* [Rspec](https://github.com/rspec/rspec)
+* [Shoulda Matchers](https://github.com/thoughtbot/shoulda-matchers)
+* [Simplecov](https://github.com/colszowka/simplecov)
+
+## Others
+
+* Configured `.gitlab-ci.yml`
+* Auto filled capistrano configure
 
 ## Development
 
@@ -30,10 +55,18 @@ After checking out the repo, run `bin/setup` to install dependencies. Then, run 
 
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
+### Test Gem
+
+If you want to test the changes for generator is works well, you can add `--path` options to use your local version
+
+```
+rb5 projectname --path=YOUR_LOCAL_GEM_PATH
+```
+
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/rb5. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/5xRuby/rb5. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## Code of Conduct
 
-Everyone interacting in the Rb5 project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/rb5/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the Rb5 project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/5xRuby/rb5/blob/master/CODE_OF_CONDUCT.md).

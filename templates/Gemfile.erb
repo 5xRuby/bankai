@@ -42,8 +42,6 @@ group :development, :test do
   gem 'bundler-audit', '~> 0.6.0', require: false
   gem 'rubocop', '~> <%= Rb5::RUBOCOP_VERSION %>', require: false
 
-  gem 'rack-mini-profiler', require: false
-
 <%- unless options[:skip_rspec] -%>
   gem 'database_rewinder'
   gem 'factory_bot_rails'
@@ -94,6 +92,7 @@ group :development do
   gem 'letter_opener'
   gem 'overcommit', require: false
   gem 'pry-rails'
+  gem 'rack-mini-profiler', require: false
 end
 
 <%- if depends_on_system_test? -%>
