@@ -1,0 +1,30 @@
+image: ruby:2.5
+
+stages:
+  - lint
+  - test
+
+cache:
+  paths:
+    - vendor/ruby
+
+rubocop:
+  stage: lint
+  before_script:
+    - gem install rubocop -v 0.60.0
+  script:
+    - rubocop
+
+bundler-audit:
+  stage: lint
+  before_script:
+    - gem install bundler-audit
+  script:
+    - bundle audit
+
+rspec:
+  stage: test
+  before_script:
+    - bundle install --path vendor
+  script:
+    - bundle exec rspec
