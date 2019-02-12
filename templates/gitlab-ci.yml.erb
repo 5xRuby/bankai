@@ -23,6 +23,7 @@ stages:
 cache:
   paths:
     - vendor/ruby
+    - node_modules
 
 rubocop:
   stage: lint
@@ -30,6 +31,8 @@ rubocop:
     - gem install rubocop -v <%= Bankai::RUBOCOP_VERSION %>
   script:
     - rubocop
+  except:
+    - schedules
 
 brakeman:
   stage: lint
@@ -39,6 +42,16 @@ brakeman:
     - gem install brakeman
   script:
     - brakeman
+  except:
+    - schedules
+
+bundler-audit:
+  stage: lint
+  before_script:
+    - gem install bundler-audit
+  script:
+    - bundle audit
+  allow_failure: true
 
 rspec:
   stage: test
@@ -60,6 +73,8 @@ rspec:
   script:
     - bundle exec rake db:migrate
     - bundle exec rspec
+  except:
+    - schedules
 
 # staging:deploy:
 #   stage: deploy
@@ -72,3 +87,5 @@ rspec:
 #     - bundle exec cap staging deploy
 #   only:
 #     - master
+#   except:
+#     - schedules
