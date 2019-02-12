@@ -18,6 +18,7 @@ rubocop:
 bundler-audit:
   stage: lint
   before_script:
+    - bundle install --path vendor
     - gem install bundler-audit
   script:
     - bundle audit
