@@ -5,16 +5,16 @@ This gem is inspired by [Suspenders](https://github.com/thoughtbot/suspenders) f
 
 ## Installation
 
-First, install rb5
+First, install bankai
 
 ```
-gem install rb5
+gem install bankai
 ```
 
 The bootstrap your rails project
 
 ```
-rb5 projectname
+bankai projectname
 ```
 
 ## Gemfile
@@ -60,13 +60,13 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 If you want to test the changes for generator is works well, you can add `--path` options to use your local version
 
 ```
-rb5 projectname --path=YOUR_LOCAL_GEM_PATH
+bankai projectname --path=YOUR_LOCAL_GEM_PATH
 ```
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/5xRuby/rb5. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/5xRuby/bankai. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## Code of Conduct
 
-Everyone interacting in the Rb5 project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/5xRuby/rb5/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the Bankai project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/5xRuby/bankai/blob/master/CODE_OF_CONDUCT.md).

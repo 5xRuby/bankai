@@ -27,7 +27,7 @@ cache:
 rubocop:
   stage: lint
   before_script:
-    - gem install rubocop -v <%= Rb5::RUBOCOP_VERSION %>
+    - gem install rubocop -v <%= Bankai::RUBOCOP_VERSION %>
   script:
     - rubocop
 

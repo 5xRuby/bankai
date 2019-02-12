@@ -2,7 +2,7 @@
 
 require 'rails/generators'
 
-module Rb5
+module Bankai
   module Generators
     # :nodoc:
     class Base < Rails::Generators::Base

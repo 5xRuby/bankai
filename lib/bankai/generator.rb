@@ -3,7 +3,7 @@
 require 'rails/generators'
 require 'rails/generators/rails/app/app_generator'
 
-module Rb5
+module Bankai
   # :nodoc:
   class Generator < Rails::Generators::AppGenerator
     hide!
@@ -66,14 +66,14 @@ module Rb5
 
     def generate_default
       run('spring stop')
-      generate('rb5:testing') unless options[:skip_rspec]
-      generate('rb5:ci')
-      generate('rb5:json')
-      generate('rb5:db_optimizations')
-      generate('rb5:mailer')
-      generate('rb5:deploy') unless options[:skip_capistrano]
+      generate('bankai:testing') unless options[:skip_rspec]
+      generate('bankai:ci')
+      generate('bankai:json')
+      generate('bankai:db_optimizations')
+      generate('bankai:mailer')
+      generate('bankai:deploy') unless options[:skip_capistrano]
       generate('annotate:install')
-      generate('rb5:lint')
+      generate('bankai:lint')
     end
 
     def setup_default_directories
@@ -85,14 +85,14 @@ module Rb5
     end
 
     def self.banner
-      "rb5 #{arguments.map(&:usage).join(' ')} [options]"
+      "bankai #{arguments.map(&:usage).join(' ')} [options]"
     end
 
     protected
 
     # rubocop:disable Naming/AccessorMethodName
     def get_builder_class
-      Rb5::Builder
+      Bankai::Builder
     end
     # rubocop:enable Naming/AccessorMethodName
   end

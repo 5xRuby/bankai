@@ -2,7 +2,7 @@
 
 require_relative 'base'
 
-module Rb5
+module Bankai
   module Generators
     # :nodoc:
     class JsonGenerator < Base

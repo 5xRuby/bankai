@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Rb5
+module Bankai
   # :nodoc:
   class Builder < Rails::AppBuilder
     def readme
@@ -18,7 +18,7 @@ module Rb5
     def replace_gemfile(path)
       template 'Gemfile.erb', 'Gemfile', force: true do |content|
         if path
-          content.gsub(/gem .rb5./) { |s| %(#{s}, path: "#{path}") }
+          content.gsub(/gem .bankai./) { |s| %(#{s}, path: "#{path}") }
         else
           content
         end

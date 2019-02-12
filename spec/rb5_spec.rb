@@ -1,6 +1,6 @@
-RSpec.describe Rb5 do
+RSpec.describe Bankai do
   it 'has a version number' do
-    expect(Rb5::VERSION).not_to be nil
+    expect(Bankai::VERSION).not_to be nil
   end
 
   it 'does something useful' do

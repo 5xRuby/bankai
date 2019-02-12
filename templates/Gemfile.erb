@@ -40,7 +40,7 @@ group :development, :test do
 
   gem 'brakeman', require: false
   gem 'bundler-audit', '~> 0.6.0', require: false
-  gem 'rubocop', '~> <%= Rb5::RUBOCOP_VERSION %>', require: false
+  gem 'rubocop', '~> <%= Bankai::RUBOCOP_VERSION %>', require: false
 
 <%- unless options[:skip_rspec] -%>
   gem 'database_rewinder'
@@ -53,7 +53,7 @@ group :development, :test do
   gem 'simplecov', require: false
 <%- end -%>
 
-  gem 'rb5'
+  gem 'bankai'
 end
 
 group :development do
@@ -79,7 +79,7 @@ group :development do
 <% end -%>
 
 <% unless options[:skip_capistrano] -%>
-  gem 'capistrano', '<%= Rb5::CAPISTRANO_VERSION %>'
+  gem 'capistrano', '<%= Bankai::CAPISTRANO_VERSION %>'
   gem 'capistrano-bundler'
   gem 'capistrano-rails'
   # gem 'capistrano-sidekiq'

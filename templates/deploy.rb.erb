@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # config valid for current version and patch releases of Capistrano
-lock '~> <%= Rb5::CAPISTRANO_VERSION %>'
+lock '~> <%= Bankai::CAPISTRANO_VERSION %>'
 
 set :application, '<%= app_name %>'
 set :repo_url, '<%= repo_url || 'git@example.com:me/my_repo.git' %>'
