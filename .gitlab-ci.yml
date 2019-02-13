@@ -14,6 +14,8 @@ rubocop:
     - gem install rubocop -v 0.60.0
   script:
     - rubocop
+  except:
+    - schedules
 
 bundler-audit:
   stage: lint
@@ -29,3 +31,5 @@ rspec:
     - bundle install --path vendor
   script:
     - bundle exec rspec
+  except:
+    - schedules
