@@ -61,7 +61,6 @@ rspec:
     - export PATH=$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH
     - bundle install --without development --path vendor
     - yarn install
-    - bin/webpack
   services:
 <%- if pg? -%>
     - postgres:9.6
