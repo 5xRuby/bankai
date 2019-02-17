@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-if ENV.fetch('COVERAGE', false)
+if ENV.fetch('COVERAGE', false) || ENV.fetch('CI', false)
   require 'simplecov'
   SimpleCov.start 'rails' do
     add_filter 'vendor'
