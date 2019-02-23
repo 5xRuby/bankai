@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'bankai/version'
 require 'bankai/generator'
 require 'bankai/generators/testing_generator'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bankai
   VERSION = '0.2.2'.freeze
   RUBY_VERSION = '2.5.0'.freeze
