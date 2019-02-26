@@ -6,6 +6,8 @@ module Bankai
   module Generators
     # :nodoc:
     class Base < Rails::Generators::Base
+      include Bankai::Helper
+
       def self.default_source_root
         File.expand_path(File.join('..', '..', '..', 'templates'), __dir__)
       end
