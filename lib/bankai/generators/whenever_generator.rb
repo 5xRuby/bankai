@@ -8,16 +8,22 @@ module Bankai
     class WheneverGenerator < Base
       def add_whenever
         gem 'whenever', require: false
-        Bundler.with_clean_env { run 'rubocop Gemfile -a' }
+        Bundler.with_clean_env { run 'rubocop -a Gemfile' }
         Bundler.with_clean_env { run 'bundle install' }
       end
 
       def initialize_whenever
-        Bundler.with_clean_env { run 'wheneverize' }
+        Bundler.with_clean_env { run "wheneverize #{destination_root}" }
       end
 
       def initialize_capistrano
-        append_to_file 'Capfile', 'require "whenever/capistrano"' if capistrano?
+        return unless capistrano?
+
+        inject_into_file(
+          'Capfile',
+          "require 'whenerver/capistrano'\n",
+          after: "# require \"capistrano/passenger\"\n"
+        )
       end
     end
   end

@@ -2,6 +2,7 @@
 
 require 'bankai/version'
 require 'bankai/generator'
+require 'bankai/helper'
 require 'bankai/generators/testing_generator'
 require 'bankai/generators/ci_generator'
 require 'bankai/generators/json_generator'
