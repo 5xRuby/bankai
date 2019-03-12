@@ -1,4 +1,4 @@
-Ruby5x
+Bankai
 ===
 
 This gem is inspired by [Suspenders](https://github.com/thoughtbot/suspenders) for [5xRuby](https://5xruby.tw) to bootstrap a rails project.
