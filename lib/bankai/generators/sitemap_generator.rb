@@ -4,7 +4,7 @@ require_relative 'base'
 
 module Bankai
   module Generators
-    HOST_TEMPLATE = <<-RUBY.freeze
+    HOST_TEMPLATE = <<-RUBY
 
       if Rails.env.production?
         "https://\#{ENV['APPLICATION_HOST']}"
