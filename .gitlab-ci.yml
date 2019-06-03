@@ -1,4 +1,4 @@
-image: ruby:2.5
+image: ruby:2.6.0
 
 stages:
   - lint
@@ -11,7 +11,7 @@ cache:
 rubocop:
   stage: lint
   before_script:
-    - gem install rubocop -v 0.60.0
+    - gem install rubocop -v 0.71.0
   script:
     - rubocop
   except:
