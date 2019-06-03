@@ -11,7 +11,7 @@ cache:
 rubocop:
   stage: lint
   before_script:
-    - gem install rubocop -v 0.71.0
+    - gem install rubocop -v 0.72.0
   script:
     - rubocop
   except:
@@ -20,6 +20,7 @@ rubocop:
 bundler-audit:
   stage: lint
   before_script:
+    - gem install bundler -v 1.17.3
     - bundle install --path vendor
     - gem install bundler-audit
   script:
@@ -28,6 +29,7 @@ bundler-audit:
 rspec:
   stage: test
   before_script:
+    - gem install bundler -v 1.17.3
     - bundle install --path vendor
   script:
     - bundle exec rspec
