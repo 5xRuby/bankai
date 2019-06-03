@@ -1,3 +1,6 @@
+require:
+  - rubocop-performance
+  - rubocop-rails
 AllCops:
   TargetRubyVersion: <%= RUBY_VERSION %>
   DisplayCopNames: true
@@ -22,6 +25,10 @@ Metrics:
     - Gemfile
     - config/**/*
     - spec/**/*
+    - lib/tasks/**/*
+Metrics/BlockLength:
+  Exclude:
+    - config/environments/*
     - lib/tasks/**/*
 Layout:
   Exclude:
