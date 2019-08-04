@@ -2,7 +2,7 @@ image: ruby:<%= RUBY_VERSION %>
 
 variables:
   RAILS_ENV: test
-  NODE_VERSION: 10.0.0
+  NODE_VERSION: 11.0.0
 <%- if pg? -%>
   POSTGRES_DB: <%= app_name %>
   DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/$POSTGRES_DB"
