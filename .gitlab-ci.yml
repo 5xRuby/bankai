@@ -3,6 +3,7 @@ image: ruby:2.6.0
 stages:
   - lint
   - test
+  - analysis
 
 cache:
   paths:
@@ -35,3 +36,14 @@ rspec:
     - bundle exec rspec
   except:
     - schedules
+
+sonarqube:
+  stage: analysis
+  image: registry.5xruby.tw/docker/sonar-scanner:4.0.0
+  script:
+    - sonar-scanner
+      -D"sonar.projectKey=space-next-door"
+      -D"sonar.projectBaseDir=${CI_PROJECT_DIR}"
+      -D"sonar.host.url=https://sonar.5xruby.tw"
+      -D"sonar.login=${SONARQUBE_TOKEN}"
+      -D"sonar.projectVersion=${CI_COMMIT_SHORT_SHA}"
