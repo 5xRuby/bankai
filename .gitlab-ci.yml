@@ -43,7 +43,7 @@ sonarqube:
   image: registry.5xruby.tw/docker/sonar-scanner:4.0.0
   script:
     - sonar-scanner
-      -D"sonar.projectKey=space-next-door"
+      -D"sonar.projectKey=5xruby-bankai"
       -D"sonar.projectBaseDir=${CI_PROJECT_DIR}"
       -D"sonar.host.url=https://sonar.5xruby.tw"
       -D"sonar.login=${SONARQUBE_TOKEN}"
