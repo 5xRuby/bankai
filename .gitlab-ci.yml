@@ -26,6 +26,7 @@ bundler-audit:
     - gem install bundler-audit
   script:
     - bundle audit
+  allow_failure: true
 
 rspec:
   stage: test
