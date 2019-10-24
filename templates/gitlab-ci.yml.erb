@@ -1,5 +1,8 @@
 image: ruby:<%= RUBY_VERSION %>
 
+include:
+  template: Verify/Browser-Performance.gitlab-ci.yml
+
 variables:
   RAILS_ENV: test
   NODE_VERSION: 11.0.0
@@ -19,6 +22,7 @@ stages:
   - lint
   - test
   - deploy
+  - measure
 
 cache:
   paths:
@@ -51,6 +55,7 @@ bundler-audit:
   stage: lint
   before_script:
     - gem install bundler-audit
+    - bundle audit --update
   script:
     - bundle audit
   allow_failure: true
@@ -90,3 +95,11 @@ rspec:
 #     - master
 #   except:
 #     - schedules
+
+# NOTE: Ensure GitLab version > 12.0
+# performance:
+#   stage: measure
+#   variables:
+#     URL: STAGING_SITE_URL
+#     SITESPEED_VERSION: 10.3.2-plus1
+#     SITESPEED_OPTIONS: '--plugins.add /lighthouse'
