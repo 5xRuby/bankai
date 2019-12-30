@@ -34,5 +34,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec', '~> 3.0'
   spec.add_development_dependency 'rubocop', '~> 0.71.0'
   spec.add_development_dependency 'simplecov'
-  spec.add_dependency 'rails', Bankai::RAILS_VERSION
+
+  # TODO: Allow specify rails version
+  spec.add_dependency 'rails', ">= #{Bankai::RAILS_VERSION}"
 end
