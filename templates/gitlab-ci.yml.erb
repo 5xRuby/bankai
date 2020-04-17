@@ -1,11 +1,8 @@
 image: ruby:<%= RUBY_VERSION %>
 
-include:
-  template: Verify/Browser-Performance.gitlab-ci.yml
-
 variables:
   RAILS_ENV: test
-  NODE_VERSION: 11.0.0
+  NODE_VERSION: 12.13.1
 <%- if pg? -%>
   POSTGRES_DB: <%= app_name %>
   DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/$POSTGRES_DB"
@@ -18,36 +15,40 @@ variables:
   DATABASE_URL: "mysql2://$MYSQL_USER:$MYSQL_PASSWORD@mysql:3306/$MYSQL_DATABASE"
 <%- end -%>
 
+.install_ruby_gems: &install_ruby_gems
+  - bundle install --path vendor
+
+.install_nodejs: &install_nodejs
+  - curl -SLO https://nodejs.org/dist/v$NODE_VERSION/node-v${NODE_VERSION}-linux-x64.tar.xz && tar -xJf node-v${NODE_VERSION}-linux-x64.tar.xz -C /usr/local --strip-components=1;
+  - curl -o- -L https://yarnpkg.com/install.sh | bash
+  - export PATH=$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH
+
 stages:
   - lint
   - test
   - deploy
-  - measure
 
 cache:
   paths:
     - vendor/ruby
     - node_modules
 
+before_script:
+  - export LANG=C.UTF-8
+  - export LC_ALL=C.UTF-8
+  - *install_ruby_gems
+
 rubocop:
   stage: lint
-  before_script:
-    - gem install rubocop -v <%= Bankai::RUBOCOP_VERSION %>
-    - gem install rubocop-performance
-    - gem install rubocop-rails
   script:
-    - rubocop
+    - bundle exec rubocop
   except:
     - schedules
 
 brakeman:
   stage: lint
-  before_script:
-    - export LANG=C.UTF-8
-    - export LC_ALL=C.UTF-8
-    - gem install brakeman
   script:
-    - brakeman
+    - bundle exec brakeman
   except:
     - schedules
 
@@ -63,14 +64,12 @@ bundler-audit:
 rspec:
   stage: test
   before_script:
-    - curl -SLO https://nodejs.org/dist/v$NODE_VERSION/node-v${NODE_VERSION}-linux-x64.tar.xz && tar -xJf node-v${NODE_VERSION}-linux-x64.tar.xz -C /usr/local --strip-components=1;
-    - curl -o- -L https://yarnpkg.com/install.sh | bash
-    - export PATH=$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH
-    - bundle install --without development --path vendor
+    - *install_nodejs
+    - *install_ruby_gems
     - yarn install
   services:
 <%- if pg? -%>
-    - postgres:9.6
+    - postgres:12-alpine
 <%- end -%>
 <%- if mysql? -%>
     - name: mysql:5.7
@@ -81,25 +80,3 @@ rspec:
     - bundle exec rspec
   except:
     - schedules
-
-# staging:deploy:
-#   stage: deploy
-#   before_script:
-#     - which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
-#     - eval $(ssh-agent -s)
-#     - ssh-add <(echo -e "$SSH_PRIVATE_KEY")
-#     - bundle install --path vendor
-#   script:
-#     - bundle exec cap staging deploy
-#   only:
-#     - master
-#   except:
-#     - schedules
-
-# NOTE: Ensure GitLab version > 12.0
-# performance:
-#   stage: measure
-#   variables:
-#     URL: STAGING_SITE_URL
-#     SITESPEED_VERSION: 10.3.2-plus1
-#     SITESPEED_OPTIONS: '--plugins.add /lighthouse'

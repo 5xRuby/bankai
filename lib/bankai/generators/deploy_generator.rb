@@ -6,6 +6,8 @@ module Bankai
   module Generators
     # :nodoc:
     class DeployGenerator < Base
+      DEFAULT_REPO = 'git@example.com:me/my_repo.git'
+
       def install_capistrano
         Bundler.with_clean_env { run 'bundle exec cap install' }
       end
@@ -25,8 +27,10 @@ module Bankai
       protected
 
       def repo_url
+        return DEFAULT_REPO unless Dir.exist?('.git')
+
         res = `git remote get-url origin`
-        return 'git@example.com:me/my_repo.git' if res.blank?
+        return DEFAULT_REPO if res.blank?
 
         res
       end

@@ -1,4 +1,4 @@
-image: ruby:2.6.0
+image: ruby:2.6.6
 
 stages:
   - lint
@@ -9,10 +9,14 @@ cache:
   paths:
     - vendor/ruby
 
+.install_ruby_gems: &install_ruby_gems
+  - bundle install --path vendor
+
+before_script:
+  - *install_ruby_gems
+
 rubocop:
   stage: lint
-  before_script:
-    - gem install rubocop -v 0.71.0
   script:
     - rubocop
   except:
@@ -21,8 +25,6 @@ rubocop:
 bundler-audit:
   stage: lint
   before_script:
-    - gem install bundler -v 1.17.3
-    - bundle install --path vendor
     - gem install bundler-audit
     - bundle audit --update
   script:
@@ -31,9 +33,6 @@ bundler-audit:
 
 rspec:
   stage: test
-  before_script:
-    - gem install bundler -v 1.17.3
-    - bundle install --path vendor
   script:
     - bundle exec rspec
   except:
