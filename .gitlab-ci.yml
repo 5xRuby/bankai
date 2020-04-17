@@ -19,13 +19,14 @@ before_script:
 rubocop:
   stage: lint
   script:
-    - rubocop
+    - bundle exec rubocop
   except:
     - schedules
 
 bundler-audit:
   stage: lint
   before_script:
+    - *install_ruby_gems
     - gem install bundler-audit
     - bundle audit --update
   script:
