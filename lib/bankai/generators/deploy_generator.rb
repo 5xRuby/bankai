@@ -38,11 +38,11 @@ module Bankai
       private
 
       def capistrano_plugins
-        <<-RUBY
-  require "capistrano/bundler"
-  require "capistrano/rails/assets"
-  require "capistrano/rails/migrations"
-        RUBY
+        plugins = []
+        plugins << 'require "capistrano/bundler"'
+        plugins << 'require "capistrano/rails/assets"' unless options[:api]
+        plugins << 'require "capistrano/rails/migrations"'
+        plugins.join("\n")
       end
     end
   end

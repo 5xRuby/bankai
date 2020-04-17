@@ -26,6 +26,8 @@ module Bankai
     end
 
     def configure_quiet_assets
+      return if options[:api]
+
       config = <<-RUBY
     config.assets.quiet = true
       RUBY
