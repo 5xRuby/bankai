@@ -43,6 +43,7 @@ rspec:
 sonarqube:
   stage: analysis
   image: registry.5xruby.tw/docker/sonar-scanner:4.0.0
+  before_script: []
   script:
     - sonar-scanner
       -D"sonar.projectKey=5xruby-bankai"
