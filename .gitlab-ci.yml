@@ -10,6 +10,7 @@ cache:
     - vendor/ruby
 
 .install_ruby_gems: &install_ruby_gems
+  - gem install bundler -v 2.1.4
   - bundle install --path vendor
 
 before_script:
