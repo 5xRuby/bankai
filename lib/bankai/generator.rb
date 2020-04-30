@@ -49,6 +49,7 @@ module Bankai
     def setup_development_environment
       say 'Setting up the development environment'
       build :configure_quiet_assets
+      build :configure_puma_dev
       build :configure_generators
       build :clear_seed_file
       # TODO: Add setup script

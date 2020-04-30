@@ -3,9 +3,11 @@ image: ruby:<%= RUBY_VERSION %>
 variables:
   RAILS_ENV: test
   NODE_VERSION: 12.13.1
+  BUNDLER_VERSION: 2.1.4
 <%- if pg? -%>
   POSTGRES_DB: <%= app_name %>
-  DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/$POSTGRES_DB"
+  POSTGRES_PASSWORD: postgres
+  DATABASE_URL: "postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/$POSTGRES_DB"
 <%- end -%>
 <%- if mysql? -%>
   MYSQL_DATABASE: <%= app_name %>
@@ -16,6 +18,7 @@ variables:
 <%- end -%>
 
 .install_ruby_gems: &install_ruby_gems
+  - gem install bundler -v ${BUNDLER_VERSION}
   - bundle install --path vendor
 
 .install_nodejs: &install_nodejs

@@ -25,19 +25,24 @@ module Bankai
       end
     end
 
+    def configure_puma_dev
+      application(nil, env: 'development') do
+        "config.hosts << '.test'"
+      end
+    end
+
     def configure_quiet_assets
       return if options[:api]
 
-      config = <<-RUBY
-    config.assets.quiet = true
-      RUBY
-
-      inject_into_class 'config/application.rb', 'Application', config
+      application do
+        'config.assets.quiet = true'
+      end
     end
 
     # rubocop:disable Metrics/MethodLength
     def configure_generators
-      config = <<-RUBY
+      application do
+        <<-RUBY
     config.generators do |generate|
       generate.helper false
       generate.javascripts false
@@ -47,9 +52,8 @@ module Bankai
       generate.test_framework :rspec
       generate.view_specs false
     end
-      RUBY
-
-      inject_into_class 'config/application.rb', 'Application', config
+        RUBY
+      end
     end
 
     def setup_default_directories
