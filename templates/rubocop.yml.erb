@@ -30,6 +30,7 @@ Metrics/BlockLength:
   Exclude:
     - config/environments/*
     - lib/tasks/**/*
+    - spec/**/*
 Lint/RaiseException:
   Enabled: true
 Lint/StructNewOverride:
@@ -37,6 +38,8 @@ Lint/StructNewOverride:
 Layout:
   Exclude:
     - config/environments/*
+Layout/LineLength:
+  Max: 120
 Style:
   Exclude:
     - spec/*_helper.rb
