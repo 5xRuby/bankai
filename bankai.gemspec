@@ -32,8 +32,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'overcommit'
   spec.add_development_dependency 'rake', '~> 12.0'
   spec.add_development_dependency 'rspec', '~> 3.0'
+  spec.add_development_dependency 'rspec_junit_formatter'
   spec.add_development_dependency 'rubocop', '~> 0.81.0'
-  spec.add_development_dependency 'simplecov'
+  spec.add_development_dependency 'simplecov', '~> 0.17.1'
 
   # TODO: Allow specify rails version
   spec.add_dependency 'rails', ">= #{Bankai::RAILS_VERSION}"

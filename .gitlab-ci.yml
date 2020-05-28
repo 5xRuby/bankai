@@ -19,7 +19,10 @@ before_script:
 rubocop:
   stage: lint
   script:
-    - bundle exec rubocop
+    - bundle exec rubocop --format progress --format json --out rubocop.json
+  artifacts:
+    paths:
+      - rubocop.json
   except:
     - schedules
 
@@ -36,18 +39,35 @@ bundler-audit:
 rspec:
   stage: test
   script:
-    - bundle exec rspec
+    - bundle exec rspec --format progress --format RspecJunitFormatter --out rspec.xml
+  artifacts:
+    paths:
+      - rspec.xml
+      - coverage
+    reports:
+      junit: rspec.xml
   except:
     - schedules
 
 sonarqube:
   stage: analysis
-  image: registry.5xruby.tw/docker/sonar-scanner:4.0.0
+  image:
+    name: sonarsource/sonar-scanner-cli
+    entrypoint: [""]
+  variables:
+    GIT_DEPTH: 0
   before_script: []
   script:
     - sonar-scanner
-      -D"sonar.projectKey=5xruby-bankai"
-      -D"sonar.projectBaseDir=${CI_PROJECT_DIR}"
-      -D"sonar.host.url=https://sonar.5xruby.tw"
-      -D"sonar.login=${SONARQUBE_TOKEN}"
-      -D"sonar.projectVersion=${CI_COMMIT_SHORT_SHA}"
+      -Dsonar.projectKey=Bankai
+      -Dsonar.sourceEncoding=UTF-8
+      -Dsonar.qualitygate.wait=true
+      -Dsonar.ruby.rubocop.reportPaths=rubocop.json
+      -Dsonar.ruby.coverage.reportPaths=coverage/.resultset.json
+      -Dsonar.exclusions=vendor/ruby/**/*
+      -Dsonar.coverage.exclusions=spec/**/*
+      -Dsonar.projectVersion=$CI_COMMIT_SHORT_SHA
+      -Dsonar.sources=.
+  allow_failure: true
+  only:
+    - master
