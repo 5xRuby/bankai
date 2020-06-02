@@ -64,6 +64,14 @@ bundler-audit:
     - bundle audit
   allow_failure: true
 
+yarn-audit:
+  stage: lint
+  before_script:
+    - *install_nodejs
+  script:
+    - yarn audit
+  allow_failure: true
+
 rspec:
   stage: test
   before_script:
