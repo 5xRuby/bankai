@@ -5,7 +5,7 @@ RSpec.configure do |config|
     DatabaseRewinder.clean_all
   end
 
-  config.after(:each) do
+  config.after do
     DatabaseRewinder.clean
   end
 end
