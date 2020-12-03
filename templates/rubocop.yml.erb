@@ -2,9 +2,11 @@ require:
   - rubocop-performance
   - rubocop-rails
   - rubocop-rspec
+
 AllCops:
   TargetRubyVersion: <%= RUBY_VERSION %>
   DisplayCopNames: true
+  NewCops: enable
   Exclude:
     - bin/*
     - vendor/ruby/**/*
@@ -32,13 +34,6 @@ Metrics/BlockLength:
     - config/environments/*
     - lib/tasks/**/*
     - spec/**/*
-Lint/RaiseException:
-  Enabled: true
-Lint/StructNewOverride:
-  Enabled: true
-Layout:
-  Exclude:
-    - config/environments/*
 Layout/LineLength:
   Max: 120
 Style:
@@ -50,9 +45,3 @@ Style/BlockComments:
     - spec/**/*
 Style/Documentation:
   Enabled: false
-Style/HashEachMethods:
-  Enabled: true
-Style/HashTransformKeys:
-  Enabled: true
-Style/HashTransformValues:
-  Enabled: true
