@@ -1,4 +1,10 @@
-image: ruby:<%= RUBY_VERSION %>
+default:
+  image: ruby:<%= RUBY_VERSION %>
+
+stages:
+  - lint
+  - test
+  - deploy
 
 variables:
   RAILS_ENV: test
@@ -26,22 +32,18 @@ variables:
   - curl -o- -L https://yarnpkg.com/install.sh | bash
   - export PATH=$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH
 
-stages:
-  - lint
-  - test
-  - deploy
-
-cache:
-  paths:
-    - vendor/ruby
-    - node_modules
-
-before_script:
-  - export LANG=C.UTF-8
-  - export LC_ALL=C.UTF-8
-  - *install_ruby_gems
+.common:
+  before_script:
+    - export LANG=C.UTF-8
+    - export LC_ALL=C.UTF-8
+    - *install_ruby_gems
+  cache:
+    paths:
+      - vendor/ruby
+      - node_modules
 
 rubocop:
+  extends: .common
   stage: lint
   script:
     - bundle exec rubocop
@@ -49,6 +51,7 @@ rubocop:
     - schedules
 
 brakeman:
+  extends: .common
   stage: lint
   script:
     - bundle exec brakeman
@@ -56,23 +59,47 @@ brakeman:
     - schedules
 
 bundler-audit:
+  extends: .common
   stage: lint
-  before_script:
+  script:
     - gem install bundler-audit
     - bundle audit --update
-  script:
     - bundle audit
+  only:
+    changes:
+      - Gemfile
+      - Gemfile.lock
+  allow_failure: true
+
+bundler-leak:
+  extends: .common
+  stage: lint
+  script:
+    - gem install bundler-leak
+    - bundle leak check --update
+    - bundle leak
+  only:
+    changes:
+      - Gemfile
+      - Gemfile.lock
   allow_failure: true
 
 yarn-audit:
+  extends: .common
   stage: lint
   before_script:
     - *install_nodejs
   script:
     - yarn audit
+  only:
+    changes:
+      - package.json
+      - package-lock.json
+      - yarn.lock
   allow_failure: true
 
 rspec:
+  extends: .common
   stage: test
   before_script:
     - *install_nodejs
