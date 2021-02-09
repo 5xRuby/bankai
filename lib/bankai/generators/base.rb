@@ -15,7 +15,11 @@ module Bankai
       private
 
       def app_name
-        Rails.app_class.parent_name.demodulize.underscore.dasherize
+        if Rails::VERSION::MAJOR >= 6
+          Rails.app_class.module_parent_name.demodulize.underscore.dasherize
+        else
+          Rails.app_class.parent_name.demodulize.underscore.dasherize
+        end
       end
     end
   end

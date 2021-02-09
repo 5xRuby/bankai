@@ -15,15 +15,15 @@ module Bankai
       end
 
       def install_overcommit
-        Bundler.with_clean_env { run 'bundle exec overcommit --install' }
+        in_root { run 'bundle exec overcommit --install' }
       end
 
       def rubocop_autocorrect
-        Bundler.with_clean_env { run 'bundle exec rubocop --auto-correct' }
+        in_root { run 'bundle exec rubocop --auto-correct' }
       end
 
       def rubocop_todo
-        Bundler.with_clean_env { run 'bundle exec rubocop --auto-gen-config' }
+        in_root { run 'bundle exec rubocop --auto-gen-config' }
       end
     end
   end

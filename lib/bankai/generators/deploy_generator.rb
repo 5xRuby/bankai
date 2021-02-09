@@ -9,7 +9,7 @@ module Bankai
       DEFAULT_REPO = 'git@example.com:me/my_repo.git'
 
       def install_capistrano
-        Bundler.with_clean_env { run 'bundle exec cap install' }
+        in_root { run 'bundle exec cap install' }
       end
 
       def configure_capfile
