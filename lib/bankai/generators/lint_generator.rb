@@ -19,7 +19,7 @@ module Bankai
       end
 
       def rubocop_autocorrect
-        in_root { run 'bundle exec rubocop --auto-correct' }
+        in_root { run 'bundle exec rubocop --auto-correct-all' }
       end
 
       def rubocop_todo

@@ -6,7 +6,7 @@ require:
 AllCops:
   TargetRubyVersion: <%= RUBY_VERSION %>
   DisplayCopNames: true
-  NewCops: enable
+  SuggestExtensions: false
   Exclude:
     - bin/*
     - vendor/ruby/**/*
@@ -33,15 +33,6 @@ Metrics/BlockLength:
   Exclude:
     - config/environments/*
     - lib/tasks/**/*
-    - spec/**/*
-Layout/LineLength:
-  Max: 120
-Style:
-  Exclude:
-    - spec/*_helper.rb
-Style/BlockComments:
-  Exclude:
-    - config/**/*
     - spec/**/*
 Style/Documentation:
   Enabled: false
