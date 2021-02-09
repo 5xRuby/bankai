@@ -20,7 +20,7 @@ module Bankai
     private
 
     def gemfile
-      @gemfile ||= File.read(destination_root + '/Gemfile')
+      @gemfile ||= File.read("#{destination_root}/Gemfile")
     end
   end
 end

@@ -71,7 +71,7 @@ module Bankai
     # rubocop:enable Metrics/MethodLength
 
     def clear_seed_file
-      File.write(destination_root + '/db/seeds.rb', '')
+      File.write("#{destination_root}/db/seeds.rb", '')
     end
 
     def setup_rack_mini_profiler

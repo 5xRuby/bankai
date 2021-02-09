@@ -26,7 +26,7 @@ module Bankai
 
       def generate_sitmap_config
         gsub_file 'config/sitemap.rb',
-                  %r{"http:\/\/www.example.com"},
+                  %r{"http://www.example.com"},
                   HOST_TEMPLATE
         in_root do
           run 'bundle exec rubocop -a config/sitemap.rb'
