@@ -8,12 +8,12 @@ module Bankai
     class WheneverGenerator < Base
       def add_whenever
         gem 'whenever', require: false
-        in_root { run 'rubocop -a Gemfile' }
-        in_root { run 'bundle install' }
+        execute_command :bundle, 'exec rubocop -a Gemfile'
+        execute_command :bundle, 'install'
       end
 
       def initialize_whenever
-        in_root { run "wheneverize #{destination_root}" }
+        execute_command :bundle, "exec wheneverize #{destination_root}"
       end
 
       def initialize_capistrano
