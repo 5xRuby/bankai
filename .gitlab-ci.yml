@@ -1,4 +1,4 @@
-image: ruby:2.6.6
+image: ruby:2.6.7
 
 stages:
   - lint
