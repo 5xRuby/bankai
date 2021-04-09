@@ -206,7 +206,7 @@ bundle exec brakeman
 cp .env.example .env
 ```
 
-<%- unless options[:skip_capistrano] -%>
+<%- if options[:capistrano] -%>
 ## 部署
 
 這個專案使用 Capistrano 進行部署，請先確定有權限透過 `deployer` 帳號 SSH 到伺服器上。

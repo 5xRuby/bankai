@@ -12,14 +12,14 @@ module Bankai
                             desc: 'Configure for selected database ' \
                                   "(options: #{DATABASES.join('/')})"
 
+    class_option :capistrano, type: :boolean, default: false,
+                              desc: 'Use Capistrano'
+
     class_option :skip_test, type: :boolean, default: true,
                              desc: 'Skip test files'
 
     class_option :skip_coffee, type: :boolean, default: true,
                                desc: "Don't use CoffeeScript"
-
-    class_option :skip_capistrano, type: :boolean, default: false,
-                                   desc: "Don't use Capistrano"
 
     class_option :skip_rspec, type: :boolean, default: false,
                               desc: 'Skip rspec files'
@@ -72,7 +72,7 @@ module Bankai
       generate('bankai:json')
       generate('bankai:db_optimizations')
       generate('bankai:mailer')
-      generate('bankai:deploy') unless options[:skip_capistrano]
+      generate('bankai:deploy') if options[:capistrano]
       generate('annotate:install')
       generate('bankai:lint')
     end
