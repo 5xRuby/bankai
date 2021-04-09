@@ -122,3 +122,6 @@ rspec:
     - bundle exec rspec
   except:
     - schedules
+  artifacts:
+    reports:
+      cobertura: coverage/coverage.xml
