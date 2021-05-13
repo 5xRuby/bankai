@@ -55,10 +55,14 @@ rubocop:
     - schedules
 
 brakeman:
-  extends: .common
+  image: registry.gitlab.com/gitlab-org/security-products/analyzers/brakeman:2
   stage: lint
+  allow_failure: true
   script:
-    - bundle exec brakeman
+    - /analyzer run
+  artifacts:
+    reports:
+      sast: gl-sast-report.json
   except:
     - schedules
 
