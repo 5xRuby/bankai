@@ -68,7 +68,7 @@ module Bankai
     def generate_default
       run('spring stop')
       generate('bankai:testing') unless options[:skip_rspec]
-      generate('bankai:ci')
+      generate('bankai:ci', options.api? ? '--api' : '')
       generate('bankai:json')
       generate('bankai:db_optimizations')
       generate('bankai:mailer')
