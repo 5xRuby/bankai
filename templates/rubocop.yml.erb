@@ -3,34 +3,24 @@ require:
   - rubocop-rails
   - rubocop-rspec
 
+inherit_mode:
+  merge:
+    - Exclude
+
 AllCops:
+  NewCops: enable
   TargetRubyVersion: <%= RUBY_VERSION %>
   DisplayCopNames: true
   SuggestExtensions: false
   Exclude:
-    - bin/*
     - vendor/ruby/**/*
     - node_modules/**/*
-    - db/schema.rb
     - .licenses/**/*
 Rails:
   Enabled: true
-Rails/UnknownEnv:
-  Environments:
-    - production
-    - staging
-    - development
-    - test
-Metrics:
-  Exclude:
-    - db/migrate/*
-    - Rakefile
-    - Gemfile
-    - config/**/*
-    - spec/**/*
-    - lib/tasks/**/*
 Metrics/BlockLength:
   Exclude:
+    - db/migrate/*
     - config/environments/*
     - lib/tasks/**/*
     - spec/**/*
