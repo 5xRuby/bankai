@@ -1,4 +1,4 @@
-image: ruby:2.6.7
+image: ruby:2.7.4
 
 stages:
   - lint
@@ -10,7 +10,7 @@ cache:
     - vendor/ruby
 
 .install_ruby_gems: &install_ruby_gems
-  - gem install bundler -v 2.1.4
+  - gem install bundler -v 2.2.26
   - bundle install --path vendor
 
 before_script:
