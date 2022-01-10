@@ -10,8 +10,7 @@ module Bankai
         inject_into_file(
           'config/environments/development.rb',
           configuration,
-          after: 'config.file_watcher = ' \
-          "ActiveSupport::EventedFileUpdateChecker\n"
+          after: '# config.action_cable.disable_request_forgery_protection = true'
         )
       end
 
