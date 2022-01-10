@@ -17,6 +17,11 @@ The bootstrap your rails project
 bankai projectname
 ```
 
+## Requirement
+
+* `~> 0.13` required `rails >= 7.0`
+* `<= 0.12` required `rails >= 5.2`
+
 ## Gemfile
 
 * [Oj](http://www.ohler.com/oj/)
