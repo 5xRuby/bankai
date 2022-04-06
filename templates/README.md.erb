@@ -135,7 +135,8 @@ bundle exec rake db:migrate
 
 ```
 # 0.5.2 是目前的版本，之後有更新情參考錯誤訊息指示的版本
-gem install mysql2 -v 0.5.2 -- --with-mysql-config=/usr/local/opt/mysql@5.7/bin/mysql_config
+export LIBRARY_PATH=$LIBRARY_PATH:$(brew --prefix openssl)/lib
+gem install mysql2 -v 0.5.2 -- --with-mysql-config=$(brew --prefix mysql@5.7)/bin/mysql_config
 ```
 
 <%- end -%>
