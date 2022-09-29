@@ -134,4 +134,6 @@ rspec:
     - if: $CI_MERGE_REQUEST_ID
   artifacts:
     reports:
-      cobertura: coverage/coverage.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/coverage.xml

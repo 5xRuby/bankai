@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Bankai
-  VERSION = '0.13.0'
+  VERSION = '0.13.1'
   RUBY_VERSION = '2.6.7'
   RAILS_VERSION = '7.0.0'
   RUBOCOP_VERSION = '1.24.1'
