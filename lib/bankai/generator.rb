@@ -10,7 +10,7 @@ module Bankai
 
     class_option :database, type: :string, aliases: '-d', default: 'postgresql',
                             desc: 'Configure for selected database ' \
-                                  "(options: #{DATABASES.join('/')})"
+                                  "(options: #{Rails::Generators::Database::DATABASES.join('/')})"
 
     class_option :capistrano, type: :boolean, default: false,
                               desc: 'Use Capistrano'
