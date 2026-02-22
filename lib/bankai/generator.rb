@@ -74,16 +74,17 @@ module Bankai
     end
 
     def generate_default
-      run('spring stop')
       run('bundle binstubs bundler')
-      generate('bankai:testing') unless options[:skip_rspec]
-      generate('bankai:ci', options.api? ? '--api' : '')
-      generate('bankai:json')
-      generate('bankai:db_optimizations')
-      generate('bankai:mailer')
-      generate('bankai:deploy') if options[:capistrano]
-      generate('annotate:install')
-      generate('bankai:lint')
+      Bundler.with_unbundled_env do
+        generate('bankai:testing') unless options[:skip_rspec]
+        generate('bankai:ci', options.api? ? '--api' : '')
+        generate('bankai:json')
+        generate('bankai:db_optimizations')
+        generate('bankai:mailer')
+        generate('bankai:deploy') if options[:capistrano]
+        generate('annotate:install')
+        generate('bankai:lint')
+      end
     end
 
     def setup_default_directories
@@ -99,6 +100,10 @@ module Bankai
     end
 
     protected
+
+    def rails_command(command, command_options = {})
+      Bundler.with_unbundled_env { super }
+    end
 
     # rubocop:disable Naming/AccessorMethodName
     def get_builder_class
