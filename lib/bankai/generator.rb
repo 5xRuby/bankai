@@ -8,9 +8,17 @@ module Bankai
   class Generator < Rails::Generators::AppGenerator
     hide!
 
+    SUPPORTED_DATABASES = if defined?(Rails::Generators::Database::DATABASES)
+                            Rails::Generators::Database::DATABASES
+                          elsif defined?(DATABASES)
+                            DATABASES
+                          else
+                            %w[postgresql mysql2 sqlite3]
+                          end
+
     class_option :database, type: :string, aliases: '-d', default: 'postgresql',
                             desc: 'Configure for selected database ' \
-                                  "(options: #{Rails::Generators::Database::DATABASES.join('/')})"
+                                  "(options: #{SUPPORTED_DATABASES.join('/')})"
 
     class_option :capistrano, type: :boolean, default: false,
                               desc: 'Use Capistrano'
@@ -67,6 +75,7 @@ module Bankai
 
     def generate_default
       run('spring stop')
+      run('bundle binstubs bundler')
       generate('bankai:testing') unless options[:skip_rspec]
       generate('bankai:ci', options.api? ? '--api' : '')
       generate('bankai:json')
