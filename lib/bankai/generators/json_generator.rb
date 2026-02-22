@@ -8,7 +8,7 @@ module Bankai
     class JsonGenerator < Base
       def add_oj
         gem 'oj'
-        execute_command :bundle, 'install'
+        run 'bundle install'
 
         initializer 'oj.rb' do
           "# frozen_string_literal: true\n\n" \

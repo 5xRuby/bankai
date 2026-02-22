@@ -15,15 +15,15 @@ module Bankai
       end
 
       def install_overcommit
-        execute_command :bundle, 'exec overcommit --install'
+        run 'bundle exec overcommit --install'
       end
 
       def rubocop_autocorrect
-        execute_command :bundle, 'exec rubocop --auto-correct-all'
+        run 'bundle exec rubocop --auto-correct-all'
       end
 
       def rubocop_todo
-        execute_command :bundle, 'exec rubocop --auto-gen-config'
+        run 'bundle exec rubocop --auto-gen-config'
       end
     end
   end
