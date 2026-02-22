@@ -27,11 +27,17 @@ module Bankai
     class_option :skip_test, type: :boolean, default: true,
                              desc: 'Skip test files'
 
-    class_option :skip_coffee, type: :boolean, default: true,
-                               desc: "Don't use CoffeeScript"
-
     class_option :skip_rspec, type: :boolean, default: false,
                               desc: 'Skip rspec files'
+
+    class_option :skip_kamal, type: :boolean, default: true,
+                              desc: 'Skip Kamal setup'
+
+    class_option :skip_solid, type: :boolean, default: true,
+                              desc: 'Skip Solid Queue/Cache/Cable setup'
+
+    class_option :skip_thruster, type: :boolean, default: true,
+                                 desc: 'Skip Thruster setup'
 
     class_option :path, type: :string, default: nil,
                         desc: 'Path to the gem'
