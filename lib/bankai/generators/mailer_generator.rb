@@ -10,7 +10,7 @@ module Bankai
         inject_into_file(
           'config/environments/development.rb',
           configuration,
-          after: '# config.action_cable.disable_request_forgery_protection = true'
+          after: "Rails.application.configure do\n"
         )
       end
 

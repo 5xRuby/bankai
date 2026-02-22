@@ -33,6 +33,7 @@ module Bankai
 
     def configure_quiet_assets
       return if options[:api]
+      return if options[:skip_asset_pipeline]
 
       application do
         'config.assets.quiet = true'
@@ -45,10 +46,8 @@ module Bankai
         <<-RUBY
     config.generators do |generate|
       generate.helper false
-      generate.javascripts false
       generate.request_specs false
       generate.routing_specs false
-      generate.stylesheets false
       generate.test_framework :rspec
       generate.view_specs false
     end

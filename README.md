@@ -19,7 +19,8 @@ bankai projectname
 
 ## Requirement
 
-* `~> 0.13` required `rails >= 7.0`
+* Ruby >= 3.2.0
+* `~> 0.13` required `rails >= 7.0` (tested up to Rails 8.1)
 * `<= 0.12` required `rails >= 5.2`
 
 ## Gemfile
@@ -41,8 +42,7 @@ bankai projectname
 
 ### Test
 
-* [Capybara](https://github.com/jnicklas/capybara)
-* [Google Chromedriver](https://sites.google.com/a/chromium.org/chromedriver/home)
+* [Capybara](https://github.com/teamcapybara/capybara)
 * [Factory Bot](https://github.com/thoughtbot/factory_bot)
 * [Faker](https://github.com/stympy/faker)
 * [Rspec](https://github.com/rspec/rspec)
