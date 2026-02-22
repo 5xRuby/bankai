@@ -11,6 +11,8 @@ module Bankai
       end
 
       def configure_rubocop
+        return if Rails::VERSION::MAJOR >= 8
+
         template 'rubocop.yml.erb', '.rubocop.yml'
       end
 
@@ -19,10 +21,14 @@ module Bankai
       end
 
       def rubocop_autocorrect
+        return if Rails::VERSION::MAJOR >= 8
+
         run 'bundle exec rubocop --auto-correct-all'
       end
 
       def rubocop_todo
+        return if Rails::VERSION::MAJOR >= 8
+
         run 'bundle exec rubocop --auto-gen-config'
       end
     end

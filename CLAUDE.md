@@ -50,10 +50,29 @@ ERB templates for generated project files (Gemfile, .rubocop.yml, .gitlab-ci.yml
 
 ## Key Options
 
-The generator accepts: `--database` (postgresql/mysql2/sqlite3, default: postgresql), `--capistrano`, `--skip-rspec`, `--api`, `--path` (local gem path for testing).
+The generator accepts: `--database` (postgresql/mysql2/sqlite3, default: postgresql), `--capistrano`, `--skip-rspec`, `--skip-kamal` (default: true), `--skip-solid` (default: true), `--skip-thruster` (default: true), `--api`, `--path` (local gem path for testing).
+
+## Rails Version Compatibility
+
+- Supports Rails 7.0 through 8.1+
+- Rails 8+ features (Kamal, Solid Queue/Cache/Cable, Thruster) are skipped by default
+- Rails 8+ auto-generates `.rubocop.yml`, so bankai skips its own rubocop config/autocorrect on Rails 8+
+- `inject_into_file` in sub-generators uses `Rails.application.configure do\n` as anchor (works across all Rails versions)
+- `Bundler.with_unbundled_env` wraps sub-generator invocations and `rails_command` to prevent Bundler env leakage
+
+## Testing Locally
+
+```bash
+# Build and install gem locally
+rake install
+
+# Generate a test app in /tmp
+cd /tmp && bankai testapp --skip-rspec
+```
 
 ## Conventions
 
 - All Ruby files use `# frozen_string_literal: true`
 - Version constants are in `lib/bankai/version.rb`
+- Required Ruby version: >= 3.2.0
 - Generated project README templates are in Traditional Chinese (zh-TW)

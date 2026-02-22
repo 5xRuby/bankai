@@ -5,7 +5,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'bankai/version'
 
 Gem::Specification.new do |spec|
-  spec.required_ruby_version = ">= #{Bankai::RUBY_VERSION}"
+  spec.required_ruby_version = '>= 3.2.0'
   spec.name          = 'bankai'
   spec.version       = Bankai::VERSION
   spec.authors       = %w[5xRuby 蒼時弦也]
