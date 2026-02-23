@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby-version: ['3.2', '3.3', '3.4', '4.0']
+        rails-version: ['7.0', '7.1', '7.2', '8.1']
+
+    name: Ruby ${{ matrix.ruby-version }} / Rails ${{ matrix.rails-version }}
+
+    env:
+      RAILS_VERSION: ${{ matrix.rails-version }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Ruby ${{ matrix.ruby-version }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+          bundler-cache: true
+          cache-version: rails-${{ matrix.rails-version }}
+
+      - name: Fix default gem directory permissions
+        run: |
+          gem_dir=$(ruby -e 'puts Gem.default_dir')
+          if [ -d "$gem_dir/gems" ]; then
+            chmod +t "$gem_dir/gems" 2>/dev/null || true
+          fi
+
+      - name: Run tests
+        run: bundle exec rspec

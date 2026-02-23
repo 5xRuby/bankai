@@ -82,7 +82,7 @@ module Bankai
 
     def generate_default
       run('bundle binstubs bundler')
-      Bundler.with_unbundled_env do
+      Bundler.with_original_env do
         generate('bankai:testing') unless options[:skip_rspec]
         generate('bankai:ci', options.api? ? '--api' : '')
         generate('bankai:json')
@@ -109,7 +109,7 @@ module Bankai
     protected
 
     def rails_command(command, command_options = {})
-      Bundler.with_unbundled_env { super }
+      Bundler.with_original_env { super }
     end
 
     # rubocop:disable Naming/AccessorMethodName
