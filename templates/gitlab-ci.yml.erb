@@ -8,10 +8,6 @@ stages:
 
 variables:
   RAILS_ENV: test
-<%- unless options.api? -%>
-  NODE_VERSION: 12.13.1
-<%- end -%>
-  BUNDLER_VERSION: 2.2.26
 <%- if pg? -%>
   POSTGRES_DB: <%= app_name %>
   POSTGRES_PASSWORD: postgres
@@ -26,14 +22,7 @@ variables:
 <%- end -%>
 
 .install_ruby_gems: &install_ruby_gems
-  - gem install bundler -v ${BUNDLER_VERSION}
   - bundle install --path vendor
-<% unless options.api? %>
-.install_nodejs: &install_nodejs
-  - curl -SLO https://nodejs.org/dist/v$NODE_VERSION/node-v${NODE_VERSION}-linux-x64.tar.xz && tar -xJf node-v${NODE_VERSION}-linux-x64.tar.xz -C /usr/local --strip-components=1;
-  - curl -o- -L https://yarnpkg.com/install.sh | bash
-  - export PATH=$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH
-<% end -%>
 
 .common:
   before_script:
@@ -44,14 +33,8 @@ variables:
     key:
       files:
         - Gemfile.lock
-<%- unless options.api? -%>
-        - yarn.lock
-<%- end -%>
     paths:
       - vendor/ruby
-<% unless options.api? %>
-      - node_modules
-<% end -%>
 
 rubocop:
   extends: .common
@@ -62,14 +45,11 @@ rubocop:
     - if: $CI_MERGE_REQUEST_ID
 
 brakeman:
-  image: registry.gitlab.com/gitlab-org/security-products/analyzers/brakeman:2
+  extends: .common
   stage: lint
   allow_failure: true
   script:
-    - /analyzer run
-  artifacts:
-    reports:
-      sast: gl-sast-report.json
+    - bundle exec brakeman -q --no-pager
   rules:
     - if: $CI_MERGE_REQUEST_ID
 
@@ -77,9 +57,7 @@ bundler-audit:
   extends: .common
   stage: lint
   script:
-    - gem install bundler-audit
-    - bundle audit --update
-    - bundle audit
+    - bundle exec bundler-audit --update
   rules:
     - if: $CI_MERGE_REQUEST_ID
     - if: $CI_PIPELINE_SOURCE == 'schedule'
@@ -95,36 +73,17 @@ bundler-leak:
   rules:
     - if: $CI_MERGE_REQUEST_ID
     - if: $CI_PIPELINE_SOURCE == 'schedule'
-<% unless options.api? %>
-yarn-audit:
-  extends: .common
-  stage: lint
-  before_script:
-    - *install_nodejs
-  script:
-    - yarn audit
-  rules:
-    - if: $CI_MERGE_REQUEST_ID
-    - if: $CI_PIPELINE_SOURCE == 'schedule'
-  allow_failure: true
-<% end -%>
 
 rspec:
   extends: .common
   stage: test
-  before_script:
-    - *install_ruby_gems
-<%- unless options.api? -%>
-    - *install_nodejs
-    - yarn install
-<%- end -%>
   services:
 <%- if pg? -%>
-    - postgres:12-alpine
+    - postgres:16-alpine
 <%- end -%>
 <%- if mysql? -%>
-    - name: mysql:5.7
-      command: ['mysqld', '--character-set-server=utf8', '--collation-server=utf8_unicode_ci']
+    - name: mysql:8.0
+      command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
 <%- end -%>
   script:
     - bundle exec rake db:migrate

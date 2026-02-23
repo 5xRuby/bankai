@@ -10,7 +10,7 @@ module Bankai
     end
 
     def mysql?
-      gemfile.match?(/gem .mysql2./)
+      gemfile.match?(/gem .(mysql2|trilogy)./)
     end
 
     def capistrano?
