@@ -19,7 +19,15 @@ RSpec.describe Bankai::Generator, :slow do
       "--path=#{gem_root}",
       chdir: @tmpdir
     )
-    raise "Generator failed (exit #{status.exitstatus}):\n#{output.lines.last(30).join}" unless status.success?
+    unless status.success?
+      diag = "Ruby: #{RUBY_VERSION}, Bundler: #{Bundler::VERSION}\n"
+      diag += "GEM_HOME: #{ENV['GEM_HOME']}\n"
+      diag += "Gem.default_dir: #{Gem.default_dir}\n"
+      diag += "BUNDLE_GEMFILE: #{ENV['BUNDLE_GEMFILE']}\n"
+      diag += "Gemfile.lock exists: #{File.exist?(File.join(@project_path, 'Gemfile.lock'))}\n"
+      diag += ".bundle/config exists: #{File.exist?(File.join(@project_path, '.bundle', 'config'))}\n"
+      raise "Generator failed (exit #{status.exitstatus}):\n\n--- Diagnostics ---\n#{diag}\n--- Full output ---\n#{output}"
+    end
   end
 
   after(:all) do
