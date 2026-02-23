@@ -2,6 +2,7 @@
 
 require 'tmpdir'
 require 'fileutils'
+require 'open3'
 
 RSpec.describe Bankai::Generator, :slow do
   before(:all) do
@@ -11,16 +12,14 @@ RSpec.describe Bankai::Generator, :slow do
     gem_root = File.expand_path('../..', __dir__)
     bankai_bin = File.join(gem_root, 'exe', 'bankai')
 
-    Bundler.with_unbundled_env do
-      success = system(
-        'ruby', bankai_bin, 'testapp',
-        '--database=sqlite3',
-        '--skip-rspec',
-        "--path=#{gem_root}",
-        chdir: @tmpdir
-      )
-      raise "Generator failed (exit #{$?.exitstatus})" unless success
-    end
+    output, status = Open3.capture2e(
+      'ruby', bankai_bin, 'testapp',
+      '--database=sqlite3',
+      '--skip-rspec',
+      "--path=#{gem_root}",
+      chdir: @tmpdir
+    )
+    raise "Generator failed (exit #{status.exitstatus}):\n#{output.lines.last(30).join}" unless status.success?
   end
 
   after(:all) do
