@@ -26,23 +26,16 @@ jobs:
           ruby-version: ${{ matrix.ruby-version }}
           bundler-cache: true
 
-      - name: Debug bundler env
+      - name: Fix default gem directory permissions
         run: |
-          echo "=== Ruby & Bundler ==="
-          ruby -v
-          bundle -v
-          echo "=== Key env vars ==="
-          echo "GEM_HOME=$GEM_HOME"
-          echo "GEM_PATH=$GEM_PATH"
-          echo "BUNDLE_PATH=$BUNDLE_PATH"
-          echo "BUNDLE_APP_CONFIG=$BUNDLE_APP_CONFIG"
-          echo "BUNDLE_GEMFILE=$BUNDLE_GEMFILE"
-          echo "=== Bundle config ==="
-          bundle config list
-          echo "=== Gem paths ==="
-          ruby -e 'puts "Gem.dir=#{Gem.dir}"; puts "Gem.default_dir=#{Gem.default_dir}"; puts "Gem.user_dir=#{Gem.user_dir}"; puts "Gem.path=#{Gem.path}"'
-          echo "=== Inside bundle exec ==="
-          bundle exec ruby -e 'require "open3"; out,_=Open3.capture2e("ruby","-e","require %q(bundler); Bundler.with_original_env { puts %Q(orig GEM_HOME=\#{ENV[%q(GEM_HOME)]}) }; Bundler.with_unbundled_env { puts %Q(unbundled GEM_HOME=\#{ENV[%q(GEM_HOME)]}) }; puts %Q(Gem.default_dir=\#{Gem.default_dir})"); puts out'
+          # Bundler 4.0 refuses to reinstall default gems when the parent
+          # directory is world-writable without sticky bit (InsecureInstallPathError).
+          # GitHub Actions runners may have permissive permissions on the Ruby
+          # gem directory. Set the sticky bit to satisfy Bundler's security check.
+          gem_dir=$(ruby -e 'puts Gem.default_dir')
+          if [ -d "$gem_dir/gems" ]; then
+            chmod +t "$gem_dir/gems" 2>/dev/null || true
+          fi
 
       - name: Run tests
         run: bundle exec rspec

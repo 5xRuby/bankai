@@ -26,7 +26,7 @@ RSpec.describe Bankai::Generator, :slow do
       diag += "BUNDLE_GEMFILE: #{ENV['BUNDLE_GEMFILE']}\n"
       diag += "Gemfile.lock exists: #{File.exist?(File.join(@project_path, 'Gemfile.lock'))}\n"
       diag += ".bundle/config exists: #{File.exist?(File.join(@project_path, '.bundle', 'config'))}\n"
-      raise "Generator failed (exit #{status.exitstatus}):\n\n--- Diagnostics ---\n#{diag}\n--- Full output ---\n#{output}"
+      raise "Generator failed (exit #{status.exitstatus}):\n\n--- Diagnostics ---\n#{diag}\n--- Output (last 80 lines) ---\n#{output.lines.last(80).join}"
     end
   end
 
