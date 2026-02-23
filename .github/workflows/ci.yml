@@ -14,8 +14,12 @@ jobs:
       fail-fast: false
       matrix:
         ruby-version: ['3.2', '3.3', '3.4', '4.0']
+        rails-version: ['7.0', '7.1', '7.2', '8.1']
 
-    name: Ruby ${{ matrix.ruby-version }}
+    name: Ruby ${{ matrix.ruby-version }} / Rails ${{ matrix.rails-version }}
+
+    env:
+      RAILS_VERSION: ${{ matrix.rails-version }}
 
     steps:
       - uses: actions/checkout@v4
@@ -25,13 +29,10 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby-version }}
           bundler-cache: true
+          cache-version: rails-${{ matrix.rails-version }}
 
       - name: Fix default gem directory permissions
         run: |
-          # Bundler 4.0 refuses to reinstall default gems when the parent
-          # directory is world-writable without sticky bit (InsecureInstallPathError).
-          # GitHub Actions runners may have permissive permissions on the Ruby
-          # gem directory. Set the sticky bit to satisfy Bundler's security check.
           gem_dir=$(ruby -e 'puts Gem.default_dir')
           if [ -d "$gem_dir/gems" ]; then
             chmod +t "$gem_dir/gems" 2>/dev/null || true
