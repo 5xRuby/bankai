@@ -74,10 +74,12 @@ bundler-leak:
     - if: $CI_MERGE_REQUEST_ID
     - if: $CI_PIPELINE_SOURCE == 'schedule'
 
-rspec:
+minitest:
   extends: .common
   stage: test
+<%- if pg? || mysql? -%>
   services:
+<%- end -%>
 <%- if pg? -%>
     - postgres:16-alpine
 <%- end -%>
@@ -87,7 +89,7 @@ rspec:
 <%- end -%>
   script:
     - bundle exec rake db:migrate
-    - bundle exec rspec
+    - bin/rails test
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $CI_MERGE_REQUEST_ID

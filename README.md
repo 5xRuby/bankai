@@ -20,20 +20,24 @@ bankai projectname
 ## Requirement
 
 * Ruby >= 3.2.0
-* `~> 0.13` required `rails >= 7.0` (tested up to Rails 8.1)
+* `>= 1.0` requires `rails >= 8.0` (tested against Rails 8.0 and 8.1)
+* `~> 0.13` required `rails >= 7.0`
 * `<= 0.12` required `rails >= 5.2`
+
+See [CHANGELOG.md](CHANGELOG.md) for what changed in 1.0.
 
 ## Gemfile
 
 * [Oj](http://www.ohler.com/oj/)
+* [Falcon](https://github.com/socketry/falcon-rails) - app server (replaces Puma)
 
 ### Development
 
 * [Brakeman](https://github.com/presidentbeef/brakeman)
 * [Bundler Audit](https://github.com/rubysec/bundler-audit)
-* [Rubocop](https://github.com/bbatsov/rubocop)
+* [Rubocop](https://github.com/rubocop/rubocop) - inherits [rubocop-rails-omakase](https://github.com/rails/rubocop-rails-omakase)
 * [Rack Mini Profiler](https://github.com/MiniProfiler/rack-mini-profiler) - Enable with `RACK_MINI_PROFILER=1`
-* [Annotate](https://github.com/ctran/annotate_models)
+* [AnnotateRb](https://github.com/drwl/annotaterb)
 * [Bullet](https://github.com/flyerhzm/bullet)
 * [Dotenv](https://github.com/bkeepers/dotenv)
 * [Letter Opener](https://github.com/ryanb/letter_opener)
@@ -42,11 +46,13 @@ bankai projectname
 
 ### Test
 
+* [Minitest](https://guides.rubyonrails.org/testing.html) - Rails' built-in test framework
 * [Capybara](https://github.com/teamcapybara/capybara)
 * [Factory Bot](https://github.com/thoughtbot/factory_bot)
-* [Faker](https://github.com/stympy/faker)
-* [Rspec](https://github.com/rspec/rspec)
+* [Faker](https://github.com/faker-ruby/faker)
+* [Shoulda Context](https://github.com/thoughtbot/shoulda-context)
 * [Shoulda Matchers](https://github.com/thoughtbot/shoulda-matchers)
+* [Database Rewinder](https://github.com/amatsuda/database_rewinder)
 * [Simplecov](https://github.com/colszowka/simplecov) - Enable with `COVERAGE=1`
 
 ## Others
@@ -62,11 +68,27 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ### Test Gem
 
-If you want to test the changes for generator is works well, you can add `--path` options to use your local version
+To try your local changes, run `exe/bankai` straight out of the checkout and
+point `--path` at that same checkout:
 
 ```
-bankai projectname --path=YOUR_LOCAL_GEM_PATH
+cd /somewhere/else
+ruby /path/to/bankai/exe/bankai projectname --path=/path/to/bankai
 ```
+
+Both parts matter, and they do different things:
+
+* which `exe/bankai` you run decides whose `lib/` and `templates/` generate the app
+* `--path` decides which bankai the **generated app** bundles, and therefore
+  which version runs the `bankai:*` sub-generators (testing, ci, lint, ...)
+
+Without `--path` the generated Gemfile asks for the released
+`gem 'bankai', '~> <major>.<minor>'`, so an unreleased version fails at
+`bundle install` rather than silently running an older gem's sub-generators.
+
+Do not run this from inside the bankai repo, and do not set `BUNDLE_GEMFILE` —
+the generated app's `bundle install` would then resolve against bankai's own
+Gemfile.
 
 ## Contributing
 

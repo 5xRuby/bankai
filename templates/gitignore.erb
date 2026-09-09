@@ -11,6 +11,7 @@
 # Ignore the default SQLite database.
 /db/*.sqlite3
 /db/*.sqlite3-journal
+/storage/*.sqlite3*
 
 <% end -%>
 # Ignore all logfiles and tempfiles.
@@ -31,21 +32,14 @@
 <% end -%>
 <% end -%>
 
-<% unless options.skip_yarn? -%>
-/node_modules
-yarn-debug.log*
-yarn-error.log*
-.yarn-integrity
-
-<% end -%>
 <% unless options.api? -%>
 /public/assets
 <% end -%>
 .byebug_history
 
-<% unless options[:skip_rspec] -%>
+<% unless options[:skip_test] -%>
 /coverage/
-/spec/tmp
+/test/tmp
 <% end -%>
 
 # Dotenv

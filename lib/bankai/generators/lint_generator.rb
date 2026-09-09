@@ -10,10 +10,9 @@ module Bankai
         template 'overcommit.yml.erb', '.overcommit.yml'
       end
 
+      # Overwrites the .rubocop.yml Rails 8 generates for itself.
       def configure_rubocop
-        return if Rails::VERSION::MAJOR >= 8
-
-        template 'rubocop.yml.erb', '.rubocop.yml'
+        template 'rubocop.yml.erb', '.rubocop.yml', force: true
       end
 
       def install_overcommit
@@ -21,14 +20,10 @@ module Bankai
       end
 
       def rubocop_autocorrect
-        return if Rails::VERSION::MAJOR >= 8
-
-        run 'bundle exec rubocop --auto-correct-all'
+        run 'bundle exec rubocop --autocorrect-all'
       end
 
       def rubocop_todo
-        return if Rails::VERSION::MAJOR >= 8
-
         run 'bundle exec rubocop --auto-gen-config'
       end
     end

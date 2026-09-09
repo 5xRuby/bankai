@@ -3,6 +3,15 @@
 module Bankai
   # :nodoc:
   class Builder < Rails::AppBuilder
+    # Thruster sets $PORT for its child, so the expansion has to happen in a
+    # shell that Thruster itself starts, not in one wrapping it.
+    DOCKERFILE_CMD_REPLACEMENTS = {
+      'CMD ["./bin/thrust", "./bin/rails", "server"]' =>
+        'CMD ["./bin/thrust", "sh", "-c", "exec bundle exec falcon serve --bind http://0.0.0.0:$PORT"]',
+      'CMD ["./bin/rails", "server"]' =>
+        'CMD ["bundle", "exec", "falcon", "serve", "--bind", "http://0.0.0.0:3000"]'
+    }.freeze
+
     def readme
       template 'README.md.erb', 'README.md'
     end
@@ -17,17 +26,41 @@ module Bankai
 
     def replace_gemfile(path)
       template 'Gemfile.erb', 'Gemfile', force: true do |content|
-        if path
-          content.gsub(/gem .bankai./) { |s| %(#{s}, path: "#{path}") }
-        else
-          content
+        next content unless path
+
+        # Replace the whole line: a path source and a version requirement
+        # cannot both be given.
+        content.sub(/^(\s*)gem 'bankai'.*$/) do
+          %(#{Regexp.last_match(1)}gem 'bankai', path: "#{path}")
         end
       end
     end
 
-    def configure_puma_dev
+    def configure_dev_hosts
       application(nil, env: 'development') do
         "config.hosts << '.test'"
+      end
+    end
+
+    # Falcon replaces Puma as the app server.
+    def remove_puma_config
+      remove_file('config/puma.rb')
+      create_file('bin/dev', <<~SH, force: true)
+        #!/usr/bin/env sh
+        exec bundle exec falcon serve --bind http://localhost:3000 --count 1 "$@"
+      SH
+      chmod('bin/dev', 0o755)
+      rewrite_dockerfile_cmd
+    end
+
+    # Rails' Dockerfile boots the app with `bin/rails server`, which cannot run
+    # Falcon: falcon-rails deliberately avoids loading Falcon during boot, so
+    # the Rackup handler is unavailable. Run `falcon serve` directly instead.
+    def rewrite_dockerfile_cmd
+      return unless File.exist?("#{destination_root}/Dockerfile")
+
+      DOCKERFILE_CMD_REPLACEMENTS.each do |from, to|
+        gsub_file('Dockerfile', from, to, verbose: false)
       end
     end
 
@@ -40,16 +73,11 @@ module Bankai
       end
     end
 
-    # rubocop:disable Metrics/MethodLength
     def configure_generators
       application do
         <<-RUBY
     config.generators do |generate|
       generate.helper false
-      generate.request_specs false
-      generate.routing_specs false
-      generate.test_framework :rspec
-      generate.view_specs false
     end
         RUBY
       end
@@ -57,17 +85,14 @@ module Bankai
 
     def setup_default_directories
       [
-        'spec/lib',
-        'spec/controllers',
-        'spec/helpers',
-        'spec/support/matchers',
-        'spec/support/mixins',
-        'spec/support/shared_examples'
+        'test/factories',
+        'test/requests',
+        'test/support/matchers',
+        'test/support/mixins'
       ].each do |dir|
         empty_directory_with_keep_file dir
       end
     end
-    # rubocop:enable Metrics/MethodLength
 
     def clear_seed_file
       File.write("#{destination_root}/db/seeds.rb", '')

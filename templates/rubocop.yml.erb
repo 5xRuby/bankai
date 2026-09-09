@@ -1,28 +1,18 @@
-require:
+inherit_gem:
+  rubocop-rails-omakase: rubocop.yml
+
+plugins:
   - rubocop-performance
   - rubocop-rails
-  - rubocop-rspec
+  - rubocop-minitest
 
 inherit_mode:
   merge:
     - Exclude
 
 AllCops:
-  NewCops: enable
-  TargetRubyVersion: <%= RUBY_VERSION %>
-  DisplayCopNames: true
   SuggestExtensions: false
   Exclude:
-    - vendor/ruby/**/*
+    - vendor/**/*
     - node_modules/**/*
-    - .licenses/**/*
-Rails:
-  Enabled: true
-Metrics/BlockLength:
-  Exclude:
-    - db/migrate/*
-    - config/environments/*
-    - lib/tasks/**/*
-    - spec/**/*
-Style/Documentation:
-  Enabled: false
+    - db/schema.rb

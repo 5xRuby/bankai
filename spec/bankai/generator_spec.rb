@@ -15,7 +15,6 @@ RSpec.describe Bankai::Generator, :slow do
     output, status = Open3.capture2e(
       'ruby', bankai_bin, 'testapp',
       '--database=sqlite3',
-      '--skip-rspec',
       "--path=#{gem_root}",
       chdir: @tmpdir
     )
@@ -56,6 +55,49 @@ RSpec.describe Bankai::Generator, :slow do
     it 'includes bankai' do
       expect(gemfile).to match(/gem ['"]bankai['"]/)
     end
+
+    it 'uses falcon instead of puma' do
+      expect(gemfile).to match(/gem ['"]falcon-rails['"]/)
+      expect(gemfile).not_to match(/gem ['"]puma['"]/)
+    end
+
+    it 'uses annotaterb instead of annotate' do
+      expect(gemfile).to match(/gem ['"]annotaterb['"]/)
+      expect(gemfile).not_to match(/gem ['"]annotate['"]/)
+    end
+  end
+
+  describe 'app server' do
+    it 'removes config/puma.rb' do
+      expect(File).not_to exist(project_file('config', 'puma.rb'))
+    end
+
+    it 'runs falcon from bin/dev' do
+      expect(read_project_file('bin', 'dev')).to include('falcon serve')
+    end
+
+    it 'runs falcon behind thruster from the Dockerfile CMD' do
+      content = read_project_file('Dockerfile')
+      expect(content).to include('CMD ["./bin/thrust", "sh", "-c"')
+      expect(content).to include('falcon serve --bind http://0.0.0.0:$PORT')
+      expect(content).not_to include('"./bin/rails", "server"')
+    end
+
+    it 'installs thruster' do
+      expect(read_project_file('Gemfile')).to match(/gem ['"]thruster['"]/)
+    end
+  end
+
+  describe 'rubocop' do
+    subject(:config) { read_project_file('.rubocop.yml') }
+
+    it 'inherits rubocop-rails-omakase' do
+      expect(config).to include('rubocop-rails-omakase')
+    end
+
+    it 'does not pin a TargetRubyVersion' do
+      expect(config).not_to include('TargetRubyVersion')
+    end
   end
 
   describe 'static files' do
@@ -92,10 +134,34 @@ RSpec.describe Bankai::Generator, :slow do
     end
   end
 
+  describe 'testing' do
+    it 'uses minitest, not rspec' do
+      expect(File).to exist(project_file('test', 'test_helper.rb'))
+      expect(File).not_to exist(project_file('spec'))
+      expect(read_project_file('Gemfile')).not_to match(/gem ['"]rspec/)
+    end
+
+    it 'installs the bankai test_helper' do
+      content = read_project_file('test', 'test_helper.rb')
+      expect(content).to include('FactoryBot::Syntax::Methods')
+      expect(content).to include('use_transactional_tests = false')
+    end
+
+    %w[coverage shoulda_matchers database_rewinder].each do |support|
+      it "generates test/support/#{support}.rb" do
+        expect(File).to exist(project_file('test', 'support', "#{support}.rb"))
+      end
+    end
+
+    it 'runs minitest in CI' do
+      expect(read_project_file('.gitlab-ci.yml')).to include('bin/rails test')
+    end
+  end
+
   describe 'configuration injection' do
-    it 'configures generators with rspec in application.rb' do
+    it 'disables helper generation in application.rb' do
       content = read_project_file('config', 'application.rb')
-      expect(content).to include('test_framework :rspec')
+      expect(content).to include('generate.helper false')
     end
 
     it 'configures quiet assets in application.rb' do
@@ -103,7 +169,7 @@ RSpec.describe Bankai::Generator, :slow do
       expect(content).to include('config.assets.quiet = true')
     end
 
-    it 'configures puma-dev host in development.rb' do
+    it 'configures the .test dev host in development.rb' do
       content = read_project_file('config', 'environments', 'development.rb')
       expect(content).to include('.test')
     end
@@ -125,10 +191,10 @@ RSpec.describe Bankai::Generator, :slow do
 
   describe 'directory structure' do
     %w[
-      spec/lib/.keep
-      spec/controllers/.keep
-      spec/helpers/.keep
-      spec/support/matchers/.keep
+      test/factories/.keep
+      test/requests/.keep
+      test/support/matchers/.keep
+      test/support/mixins/.keep
     ].each do |path|
       it "creates #{path}" do
         expect(File).to exist(project_file(path))

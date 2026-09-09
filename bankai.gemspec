@@ -29,11 +29,11 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'bundler-audit'
   spec.add_development_dependency 'overcommit'
-  spec.add_development_dependency 'rake', '~> 12.0'
+  spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rspec', '~> 3.0'
   spec.add_development_dependency 'rspec_junit_formatter'
-  spec.add_development_dependency 'rubocop', '~> 1.8.1'
-  spec.add_development_dependency 'simplecov', '~> 0.17.1'
+  spec.add_development_dependency 'rubocop', '~> 1.90'
+  spec.add_development_dependency 'simplecov', '~> 0.22'
 
   # TODO: Allow specify rails version
   spec.add_dependency 'rails', ">= #{Bankai::RAILS_VERSION}"
