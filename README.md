@@ -26,14 +26,15 @@ bankai projectname
 ## Gemfile
 
 * [Oj](http://www.ohler.com/oj/)
+* [Falcon](https://github.com/socketry/falcon-rails) - app server (replaces Puma)
 
 ### Development
 
 * [Brakeman](https://github.com/presidentbeef/brakeman)
 * [Bundler Audit](https://github.com/rubysec/bundler-audit)
-* [Rubocop](https://github.com/bbatsov/rubocop)
+* [Rubocop](https://github.com/rubocop/rubocop) - inherits [rubocop-rails-omakase](https://github.com/rails/rubocop-rails-omakase)
 * [Rack Mini Profiler](https://github.com/MiniProfiler/rack-mini-profiler) - Enable with `RACK_MINI_PROFILER=1`
-* [Annotate](https://github.com/ctran/annotate_models)
+* [AnnotateRb](https://github.com/drwl/annotaterb)
 * [Bullet](https://github.com/flyerhzm/bullet)
 * [Dotenv](https://github.com/bkeepers/dotenv)
 * [Letter Opener](https://github.com/ryanb/letter_opener)

@@ -77,7 +77,9 @@ bundler-leak:
 rspec:
   extends: .common
   stage: test
+<%- if pg? || mysql? -%>
   services:
+<%- end -%>
 <%- if pg? -%>
     - postgres:16-alpine
 <%- end -%>

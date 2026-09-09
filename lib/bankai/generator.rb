@@ -17,7 +17,7 @@ module Bankai
                             %w[postgresql mysql2 sqlite3]
                           end
 
-    class_option :database, type: :string, aliases: '-d', default: 'postgresql',
+    class_option :database, type: :string, aliases: '-d', default: 'sqlite3',
                             desc: 'Configure for selected database ' \
                                   "(options: #{SUPPORTED_DATABASES.join('/')})"
 
@@ -33,7 +33,7 @@ module Bankai
     class_option :skip_kamal, type: :boolean, default: true,
                               desc: 'Skip Kamal setup'
 
-    class_option :skip_solid, type: :boolean, default: true,
+    class_option :skip_solid, type: :boolean, default: false,
                               desc: 'Skip Solid Queue/Cache/Cable setup'
 
     class_option :skip_thruster, type: :boolean, default: true,
@@ -52,6 +52,7 @@ module Bankai
       invoke :setup_development_environment
       invoke :configure_app
       invoke :setup_dotfiles
+      invoke :install_binstubs
       invoke :generate_default
       invoke :setup_default_directories
     end
@@ -64,7 +65,8 @@ module Bankai
     def setup_development_environment
       say 'Setting up the development environment'
       build :configure_quiet_assets
-      build :configure_puma_dev
+      build :configure_dev_hosts
+      build :remove_puma_config
       build :configure_generators
       build :clear_seed_file
       # TODO: Add setup script
@@ -80,8 +82,11 @@ module Bankai
       build :copy_dotfiles
     end
 
-    def generate_default
+    def install_binstubs
       run('bundle binstubs bundler')
+    end
+
+    def generate_default
       Bundler.with_original_env do
         generate('bankai:testing') unless options[:skip_rspec]
         generate('bankai:ci', options.api? ? '--api' : '')
@@ -89,7 +94,7 @@ module Bankai
         generate('bankai:db_optimizations')
         generate('bankai:mailer')
         generate('bankai:deploy') if options[:capistrano]
-        generate('annotate:install')
+        generate('annotate_rb:install')
         generate('bankai:lint')
       end
     end

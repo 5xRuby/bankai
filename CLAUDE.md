@@ -50,13 +50,16 @@ ERB templates for generated project files (Gemfile, .rubocop.yml, .gitlab-ci.yml
 
 ## Key Options
 
-The generator accepts: `--database` (postgresql/mysql2/sqlite3, default: postgresql), `--capistrano`, `--skip-rspec`, `--skip-kamal` (default: true), `--skip-solid` (default: true), `--skip-thruster` (default: true), `--api`, `--path` (local gem path for testing).
+The generator accepts: `--database` (postgresql/mysql2/sqlite3, default: sqlite3), `--capistrano`, `--skip-rspec`, `--skip-kamal` (default: true), `--skip-solid` (default: false), `--skip-thruster` (default: true), `--api`, `--path` (local gem path for testing).
 
 ## Rails Version Compatibility
 
 - Supports Rails 7.0 through 8.1+
-- Rails 8+ features (Kamal, Solid Queue/Cache/Cable, Thruster) are skipped by default
-- Rails 8+ auto-generates `.rubocop.yml`, so bankai skips its own rubocop config/autocorrect on Rails 8+
+- Defaults: sqlite3 + Solid Queue/Cache/Cable + falcon-rails as the app server
+- Kamal and Thruster are skipped by default (Thruster is Puma-specific)
+- `templates/Gemfile.erb` replaces Rails' own Gemfile wholesale, so anything Rails declares in its Gemfile template (solid_*, kamal, rubocop-rails-omakase) must be repeated there
+- `.rubocop.yml` inherits `rubocop-rails-omakase`; bankai writes it with `force: true` to overwrite the one Rails 8 generates
+- Puma is filtered out of `gemfile_entries`; `Builder#remove_puma_config` deletes `config/puma.rb` and rewrites `bin/dev` to run `falcon serve`
 - `inject_into_file` in sub-generators uses `Rails.application.configure do\n` as anchor (works across all Rails versions)
 - `Bundler.with_unbundled_env` wraps sub-generator invocations and `rails_command` to prevent Bundler env leakage
 

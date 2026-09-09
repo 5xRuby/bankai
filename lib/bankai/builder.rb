@@ -25,10 +25,20 @@ module Bankai
       end
     end
 
-    def configure_puma_dev
+    def configure_dev_hosts
       application(nil, env: 'development') do
         "config.hosts << '.test'"
       end
+    end
+
+    # Falcon replaces Puma as the app server.
+    def remove_puma_config
+      remove_file('config/puma.rb')
+      create_file('bin/dev', <<~SH, force: true)
+        #!/usr/bin/env sh
+        exec bundle exec falcon serve --bind http://localhost:3000 --count 1 "$@"
+      SH
+      chmod('bin/dev', 0o755)
     end
 
     def configure_quiet_assets
@@ -40,7 +50,6 @@ module Bankai
       end
     end
 
-    # rubocop:disable Metrics/MethodLength
     def configure_generators
       application do
         <<-RUBY
@@ -67,7 +76,6 @@ module Bankai
         empty_directory_with_keep_file dir
       end
     end
-    # rubocop:enable Metrics/MethodLength
 
     def clear_seed_file
       File.write("#{destination_root}/db/seeds.rb", '')

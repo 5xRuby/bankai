@@ -56,6 +56,38 @@ RSpec.describe Bankai::Generator, :slow do
     it 'includes bankai' do
       expect(gemfile).to match(/gem ['"]bankai['"]/)
     end
+
+    it 'uses falcon instead of puma' do
+      expect(gemfile).to match(/gem ['"]falcon-rails['"]/)
+      expect(gemfile).not_to match(/gem ['"]puma['"]/)
+    end
+
+    it 'uses annotaterb instead of annotate' do
+      expect(gemfile).to match(/gem ['"]annotaterb['"]/)
+      expect(gemfile).not_to match(/gem ['"]annotate['"]/)
+    end
+  end
+
+  describe 'app server' do
+    it 'removes config/puma.rb' do
+      expect(File).not_to exist(project_file('config', 'puma.rb'))
+    end
+
+    it 'runs falcon from bin/dev' do
+      expect(read_project_file('bin', 'dev')).to include('falcon serve')
+    end
+  end
+
+  describe 'rubocop' do
+    subject(:config) { read_project_file('.rubocop.yml') }
+
+    it 'inherits rubocop-rails-omakase' do
+      expect(config).to include('rubocop-rails-omakase')
+    end
+
+    it 'does not pin a TargetRubyVersion' do
+      expect(config).not_to include('TargetRubyVersion')
+    end
   end
 
   describe 'static files' do
@@ -103,7 +135,7 @@ RSpec.describe Bankai::Generator, :slow do
       expect(content).to include('config.assets.quiet = true')
     end
 
-    it 'configures puma-dev host in development.rb' do
+    it 'configures the .test dev host in development.rb' do
       content = read_project_file('config', 'environments', 'development.rb')
       expect(content).to include('.test')
     end
