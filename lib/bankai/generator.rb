@@ -9,26 +9,15 @@ module Bankai
   class Generator < Rails::Generators::AppGenerator
     hide!
 
-    SUPPORTED_DATABASES = if defined?(Rails::Generators::Database::DATABASES)
-                            Rails::Generators::Database::DATABASES
-                          elsif defined?(DATABASES)
-                            DATABASES
-                          else
-                            %w[postgresql mysql2 sqlite3]
-                          end
-
     class_option :database, type: :string, aliases: '-d', default: 'sqlite3',
                             desc: 'Configure for selected database ' \
-                                  "(options: #{SUPPORTED_DATABASES.join('/')})"
+                                  "(options: #{Rails::Generators::Database::DATABASES.join('/')})"
 
     class_option :capistrano, type: :boolean, default: false,
                               desc: 'Use Capistrano'
 
-    class_option :skip_test, type: :boolean, default: true,
+    class_option :skip_test, type: :boolean, default: false,
                              desc: 'Skip test files'
-
-    class_option :skip_rspec, type: :boolean, default: false,
-                              desc: 'Skip rspec files'
 
     class_option :skip_kamal, type: :boolean, default: true,
                               desc: 'Skip Kamal setup'
@@ -88,7 +77,7 @@ module Bankai
 
     def generate_default
       Bundler.with_original_env do
-        generate('bankai:testing') unless options[:skip_rspec]
+        generate('bankai:testing') unless options[:skip_test]
         generate('bankai:ci', options.api? ? '--api' : '')
         generate('bankai:json')
         generate('bankai:db_optimizations')
@@ -104,7 +93,7 @@ module Bankai
     end
 
     def depends_on_system_test?
-      !(options[:skip_system_test] || options[:skip_rspec] || options[:api])
+      !(options[:skip_system_test] || options[:skip_test] || options[:api])
     end
 
     def self.banner

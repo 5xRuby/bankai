@@ -6,29 +6,20 @@ module Bankai
   module Generators
     # :nodoc:
     class TestingGenerator < Base
-      def generate_rspec
-        generate 'rspec:install'
+      def configure_minitest
+        template 'test_helper.rb', 'test/test_helper.rb', force: true
       end
 
-      def configure_rspec
-        remove_file 'spec/rails_helper.rb'
-        remove_file 'spec/spec_helper.rb'
-        copy_file 'rails_helper.rb', 'spec/rails_helper.rb'
-        copy_file 'spec_helper.rb', 'spec/spec_helper.rb'
+      def provide_coverage_config
+        copy_file 'test/coverage.rb', 'test/support/coverage.rb'
       end
 
       def provide_shoulda_matchers_config
-        copy_file(
-          'spec/shoulda_matchers.rb',
-          'spec/support/shoulda_matchers.rb'
-        )
+        copy_file 'test/shoulda_matchers.rb', 'test/support/shoulda_matchers.rb'
       end
 
       def provide_database_rewinder_config
-        copy_file(
-          'spec/database_rewinder.rb',
-          'spec/support/database_rewinder.rb'
-        )
+        copy_file 'test/database_rewinder.rb', 'test/support/database_rewinder.rb'
       end
     end
   end

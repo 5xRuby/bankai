@@ -31,10 +31,8 @@ module Bankai
       end
     end
 
-    # Falcon replaces Puma as the app server on Rails 8+.
+    # Falcon replaces Puma as the app server.
     def remove_puma_config
-      return unless Rails::VERSION::MAJOR >= 8
-
       remove_file('config/puma.rb')
       create_file('bin/dev', <<~SH, force: true)
         #!/usr/bin/env sh
@@ -57,10 +55,6 @@ module Bankai
         <<-RUBY
     config.generators do |generate|
       generate.helper false
-      generate.request_specs false
-      generate.routing_specs false
-      generate.test_framework :rspec
-      generate.view_specs false
     end
         RUBY
       end
@@ -68,12 +62,10 @@ module Bankai
 
     def setup_default_directories
       [
-        'spec/lib',
-        'spec/controllers',
-        'spec/helpers',
-        'spec/support/matchers',
-        'spec/support/mixins',
-        'spec/support/shared_examples'
+        'test/factories',
+        'test/requests',
+        'test/support/matchers',
+        'test/support/mixins'
       ].each do |dir|
         empty_directory_with_keep_file dir
       end

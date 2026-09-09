@@ -43,11 +43,13 @@ bankai projectname
 
 ### Test
 
+* [Minitest](https://guides.rubyonrails.org/testing.html) - Rails' built-in test framework
 * [Capybara](https://github.com/teamcapybara/capybara)
 * [Factory Bot](https://github.com/thoughtbot/factory_bot)
-* [Faker](https://github.com/stympy/faker)
-* [Rspec](https://github.com/rspec/rspec)
+* [Faker](https://github.com/faker-ruby/faker)
+* [Shoulda Context](https://github.com/thoughtbot/shoulda-context)
 * [Shoulda Matchers](https://github.com/thoughtbot/shoulda-matchers)
+* [Database Rewinder](https://github.com/amatsuda/database_rewinder)
 * [Simplecov](https://github.com/colszowka/simplecov) - Enable with `COVERAGE=1`
 
 ## Others

@@ -173,14 +173,20 @@ bundle exec rake db:migrate
 和 Rails 伺服器同時打開後，就可以看到正常的網站畫面
 
 <%- end -%>
-<%- unless options[:skip_rspec] -%>
+<%- unless options[:skip_test] -%>
 ### 運行測試
 
-這個專案使用 RSpec 進行測試，可以透過執行以下指令運行
+這個專案使用 Minitest 進行測試，可以透過執行以下指令運行
 
 ```bash
-bundle exec rspec
+bin/rails test           # 全部
+bin/rails test test/models/user_test.rb
+bin/rails test test/models/user_test.rb:42
+COVERAGE=1 bin/rails test # 加上覆蓋率報告
 ```
+
+測試資料使用 factory_bot（factory 放在 `test/factories/`）與 faker，
+資料庫由 DatabaseRewinder 在每個 test 後清空，所以沒有使用 fixtures。
 
 <%- end -%>
 ### Ruby 語法檢查

@@ -3,7 +3,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '<%= RUBY_VERSION -%>'
 
-<% gemfile_entries.reject { |entry| Rails::VERSION::MAJOR >= 8 && entry.name == 'puma' }.each do |gemfile_entry| %>
+<% gemfile_entries.reject { |entry| entry.name == 'puma' }.each do |gemfile_entry| %>
 <%= gemfile_entry %>
 <% end -%>
 <% unless options.minimal? -%>
@@ -15,14 +15,12 @@ ruby '<%= RUBY_VERSION -%>'
 # gem "bcrypt", "~> 3.1.7"
 <% end -%>
 
-<% if Rails::VERSION::MAJOR >= 8 -%>
 # Use Falcon as the app server [https://github.com/socketry/falcon-rails]
 gem "falcon-rails"
 
-<% end -%>
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
-<% if Rails::VERSION::MAJOR >= 8 && !options.skip_solid? -%>
+<% unless options.skip_solid? -%>
 
 # Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
 gem "solid_cache"
@@ -31,7 +29,7 @@ gem "solid_queue"
 gem "solid_cable"
 <% end -%>
 <% end -%>
-<% if Rails::VERSION::MAJOR >= 8 && !options.skip_kamal? -%>
+<% unless options.skip_kamal? -%>
 
 # Deploy this application anywhere as a Docker container [https://kamal-deploy.org]
 gem "kamal", require: false
@@ -60,14 +58,13 @@ group :development, :test do
   gem 'brakeman', require: false
   gem 'bundler-audit', require: false
   gem 'rubocop-rails-omakase', require: false
-  gem 'rubocop-rspec', require: false
+  gem 'rubocop-minitest', require: false
 
-<%- unless options[:skip_rspec] -%>
+<%- unless options[:skip_test] -%>
   gem 'database_rewinder'
   gem 'factory_bot_rails'
   gem 'faker'
-  gem 'rspec', require: false
-  gem 'rspec-rails', require: false
+  gem 'shoulda-context', require: false
   gem 'shoulda-matchers', require: false
   gem 'simplecov', require: false
   gem 'simplecov-cobertura', require: false

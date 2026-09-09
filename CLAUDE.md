@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Bankai is a Rails application template generator by 5xRuby (inspired by thoughtbot's Suspenders). It generates new Rails projects pre-configured with 5xRuby's standard tooling: RSpec, Rubocop, Overcommit, GitLab CI, and more.
+Bankai is a Rails application template generator by 5xRuby (inspired by thoughtbot's Suspenders). It generates new Rails projects pre-configured with 5xRuby's standard tooling: Minitest, Rubocop, Overcommit, GitLab CI, and more.
 
 The CLI entry point is `exe/bankai`, which invokes `Bankai::Generator`.
 
@@ -50,17 +50,19 @@ ERB templates for generated project files (Gemfile, .rubocop.yml, .gitlab-ci.yml
 
 ## Key Options
 
-The generator accepts: `--database` (postgresql/mysql2/sqlite3, default: sqlite3), `--capistrano`, `--skip-rspec`, `--skip-kamal` (default: true), `--skip-solid` (default: false), `--skip-thruster` (default: true), `--api`, `--path` (local gem path for testing).
+The generator accepts: `--database` (postgresql/mysql2/sqlite3, default: sqlite3), `--capistrano`, `--skip-test`, `--skip-kamal` (default: true), `--skip-solid` (default: false), `--skip-thruster` (default: true), `--api`, `--path` (local gem path for testing).
 
 ## Rails Version Compatibility
 
-- Supports Rails 7.0 through 8.1+
+- Supports Rails 8.0 and 8.1 only (Rails 7 support was dropped: falcon-rails requires Rails >= 8.0)
 - Defaults: sqlite3 + Solid Queue/Cache/Cable + falcon-rails as the app server
+- Tests are Minitest (Rails' default), with factory_bot + faker for data and DatabaseRewinder
+  instead of transactional fixtures; `templates/test_helper.rb` replaces the one Rails generates
 - Kamal and Thruster are skipped by default (Thruster is Puma-specific)
 - `templates/Gemfile.erb` replaces Rails' own Gemfile wholesale, so anything Rails declares in its Gemfile template (solid_*, kamal, rubocop-rails-omakase) must be repeated there
 - `.rubocop.yml` inherits `rubocop-rails-omakase`; bankai writes it with `force: true` to overwrite the one Rails 8 generates
 - Puma is filtered out of `gemfile_entries`; `Builder#remove_puma_config` deletes `config/puma.rb` and rewrites `bin/dev` to run `falcon serve`
-- `inject_into_file` in sub-generators uses `Rails.application.configure do\n` as anchor (works across all Rails versions)
+- `inject_into_file` in sub-generators uses `Rails.application.configure do\n` as anchor
 - `Bundler.with_unbundled_env` wraps sub-generator invocations and `rails_command` to prevent Bundler env leakage
 
 ## Testing Locally
@@ -77,5 +79,5 @@ cd /tmp && bankai testapp --skip-rspec
 
 - All Ruby files use `# frozen_string_literal: true`
 - Version constants are in `lib/bankai/version.rb`
-- Required Ruby version: >= 3.2.0
+- Required Ruby version: >= 3.2.0; CI matrix is Ruby 3.2/3.3/3.4/4.0 x Rails 8.0/8.1
 - Generated project README templates are in Traditional Chinese (zh-TW)
