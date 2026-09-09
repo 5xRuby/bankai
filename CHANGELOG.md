@@ -67,6 +67,15 @@ so this release is not backwards compatible with `0.14`.
 - Deprecated Bundler platform names (`%i[mingw mswin x64_mingw]`) are now
   `%i[windows jruby]` / `%i[mri windows]`.
 - The deprecated `SimpleCov.add_filter` call is now `SimpleCov.skip`.
+- Rails' Dockerfile `CMD` is rewritten to run `falcon serve`. It shipped as
+  `bin/rails server`, which cannot start Falcon — falcon-rails deliberately does
+  not load Falcon during boot, so the Rackup handler is unavailable and
+  `rails server` fails with "Could not find a server gem" — meaning the
+  generated Dockerfile would not have booted at all. With `--no-skip-thruster`
+  the `CMD` becomes `./bin/thrust sh -c 'exec ... --bind http://0.0.0.0:$PORT'`,
+  so `$PORT` expands in the shell Thruster starts rather than in one wrapping it.
+- `gem "thruster"` is declared in the Gemfile template, so `--no-skip-thruster`
+  actually installs it (same omission as `solid_*` and `kamal`).
 - The generated Gemfile now pins `gem 'bankai', '~> <major>.<minor>'`. It was
   unpinned, so running an unreleased `exe/bankai` without `--path` silently
   bundled an older published bankai and ran *its* `bankai:*` sub-generators;

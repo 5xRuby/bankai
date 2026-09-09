@@ -3,6 +3,15 @@
 module Bankai
   # :nodoc:
   class Builder < Rails::AppBuilder
+    # Thruster sets $PORT for its child, so the expansion has to happen in a
+    # shell that Thruster itself starts, not in one wrapping it.
+    DOCKERFILE_CMD_REPLACEMENTS = {
+      'CMD ["./bin/thrust", "./bin/rails", "server"]' =>
+        'CMD ["./bin/thrust", "sh", "-c", "exec bundle exec falcon serve --bind http://0.0.0.0:$PORT"]',
+      'CMD ["./bin/rails", "server"]' =>
+        'CMD ["bundle", "exec", "falcon", "serve", "--bind", "http://0.0.0.0:3000"]'
+    }.freeze
+
     def readme
       template 'README.md.erb', 'README.md'
     end
@@ -41,6 +50,18 @@ module Bankai
         exec bundle exec falcon serve --bind http://localhost:3000 --count 1 "$@"
       SH
       chmod('bin/dev', 0o755)
+      rewrite_dockerfile_cmd
+    end
+
+    # Rails' Dockerfile boots the app with `bin/rails server`, which cannot run
+    # Falcon: falcon-rails deliberately avoids loading Falcon during boot, so
+    # the Rackup handler is unavailable. Run `falcon serve` directly instead.
+    def rewrite_dockerfile_cmd
+      return unless File.exist?("#{destination_root}/Dockerfile")
+
+      DOCKERFILE_CMD_REPLACEMENTS.each do |from, to|
+        gsub_file('Dockerfile', from, to, verbose: false)
+      end
     end
 
     def configure_quiet_assets

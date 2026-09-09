@@ -34,6 +34,11 @@ gem "solid_cable"
 # Deploy this application anywhere as a Docker container [https://kamal-deploy.org]
 gem "kamal", require: false
 <% end -%>
+<% unless options.skip_thruster? -%>
+
+# Add HTTP asset caching/compression and X-Sendfile acceleration [https://github.com/basecamp/thruster/]
+gem "thruster", require: false
+<% end -%>
 <% if depend_on_bootsnap? -%>
 
 # Reduces boot times through caching; required in config/boot.rb

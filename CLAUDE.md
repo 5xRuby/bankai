@@ -58,7 +58,12 @@ The generator accepts: `--database` (postgresql/mysql2/sqlite3, default: sqlite3
 - Defaults: sqlite3 + Solid Queue/Cache/Cable + falcon-rails as the app server
 - Tests are Minitest (Rails' default), with factory_bot + faker for data and DatabaseRewinder
   instead of transactional fixtures; `templates/test_helper.rb` replaces the one Rails generates
-- Kamal and Thruster are skipped by default (Thruster is Puma-specific)
+- Kamal and Thruster are skipped by default. Thruster is not Puma-specific (it proxies to
+  whatever command it wraps via `$PORT`), so it can front Falcon if enabled
+- `Builder#rewrite_dockerfile_cmd` rewrites Rails' Dockerfile `CMD`, which uses
+  `bin/rails server`. That cannot run Falcon: falcon-rails deliberately avoids loading
+  Falcon during boot, so the Rackup handler is unavailable and `rails server` reports
+  "Could not find a server gem". Use `falcon serve` directly
 - `templates/Gemfile.erb` replaces Rails' own Gemfile wholesale, so anything Rails declares in its Gemfile template (solid_*, kamal, rubocop-rails-omakase) must be repeated there
 - `.rubocop.yml` inherits `rubocop-rails-omakase`; bankai writes it with `force: true` to overwrite the one Rails 8 generates
 - Puma is filtered out of `gemfile_entries`; `Builder#remove_puma_config` deletes `config/puma.rb` and rewrites `bin/dev` to run `falcon serve`

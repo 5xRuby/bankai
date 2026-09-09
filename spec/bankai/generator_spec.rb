@@ -75,6 +75,12 @@ RSpec.describe Bankai::Generator, :slow do
     it 'runs falcon from bin/dev' do
       expect(read_project_file('bin', 'dev')).to include('falcon serve')
     end
+
+    it 'runs falcon from the Dockerfile CMD' do
+      content = read_project_file('Dockerfile')
+      expect(content).to include('CMD ["bundle", "exec", "falcon", "serve"')
+      expect(content).not_to include('CMD ["./bin/rails", "server"]')
+    end
   end
 
   describe 'rubocop' do
