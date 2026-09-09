@@ -1,10 +1,9 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'pathname'
-
-source_path = File.expand_path("#{Pathname.new(__FILE__).dirname}../lib")
-$LOAD_PATH << source_path
+# Prepend, so running this file straight out of a checkout uses that checkout
+# rather than whichever bankai gem happens to be installed.
+$LOAD_PATH.unshift(File.expand_path('../lib', __dir__))
 
 require 'bankai'
 
