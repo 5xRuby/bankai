@@ -3,7 +3,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '<%= RUBY_VERSION -%>'
 
-<% gemfile_entries.reject { |entry| entry.name == 'puma' }.each do |gemfile_entry| %>
+<% gemfile_entries.reject { |entry| Rails::VERSION::MAJOR >= 8 && entry.name == 'puma' }.each do |gemfile_entry| %>
 <%= gemfile_entry %>
 <% end -%>
 <% unless options.minimal? -%>
@@ -15,9 +15,11 @@ ruby '<%= RUBY_VERSION -%>'
 # gem "bcrypt", "~> 3.1.7"
 <% end -%>
 
+<% if Rails::VERSION::MAJOR >= 8 -%>
 # Use Falcon as the app server [https://github.com/socketry/falcon-rails]
 gem "falcon-rails"
 
+<% end -%>
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 <% if Rails::VERSION::MAJOR >= 8 && !options.skip_solid? -%>

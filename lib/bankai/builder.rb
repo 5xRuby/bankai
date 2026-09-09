@@ -31,8 +31,10 @@ module Bankai
       end
     end
 
-    # Falcon replaces Puma as the app server.
+    # Falcon replaces Puma as the app server on Rails 8+.
     def remove_puma_config
+      return unless Rails::VERSION::MAJOR >= 8
+
       remove_file('config/puma.rb')
       create_file('bin/dev', <<~SH, force: true)
         #!/usr/bin/env sh

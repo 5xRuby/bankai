@@ -58,6 +58,8 @@ RSpec.describe Bankai::Generator, :slow do
     end
 
     it 'uses falcon instead of puma' do
+      skip 'falcon-rails requires Rails 8+' if Rails::VERSION::MAJOR < 8
+
       expect(gemfile).to match(/gem ['"]falcon-rails['"]/)
       expect(gemfile).not_to match(/gem ['"]puma['"]/)
     end
@@ -69,6 +71,8 @@ RSpec.describe Bankai::Generator, :slow do
   end
 
   describe 'app server' do
+    before { skip 'falcon-rails requires Rails 8+' if Rails::VERSION::MAJOR < 8 }
+
     it 'removes config/puma.rb' do
       expect(File).not_to exist(project_file('config', 'puma.rb'))
     end
