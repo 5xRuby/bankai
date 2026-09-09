@@ -76,10 +76,15 @@ RSpec.describe Bankai::Generator, :slow do
       expect(read_project_file('bin', 'dev')).to include('falcon serve')
     end
 
-    it 'runs falcon from the Dockerfile CMD' do
+    it 'runs falcon behind thruster from the Dockerfile CMD' do
       content = read_project_file('Dockerfile')
-      expect(content).to include('CMD ["bundle", "exec", "falcon", "serve"')
-      expect(content).not_to include('CMD ["./bin/rails", "server"]')
+      expect(content).to include('CMD ["./bin/thrust", "sh", "-c"')
+      expect(content).to include('falcon serve --bind http://0.0.0.0:$PORT')
+      expect(content).not_to include('"./bin/rails", "server"')
+    end
+
+    it 'installs thruster' do
+      expect(read_project_file('Gemfile')).to match(/gem ['"]thruster['"]/)
     end
   end
 

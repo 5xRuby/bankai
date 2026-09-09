@@ -23,6 +23,9 @@ so this release is not backwards compatible with `0.14`.
 - **Falcon replaces Puma as the app server.** `puma` is filtered out of the
   Gemfile, `config/puma.rb` is removed, and `bin/dev` runs
   `falcon serve --bind http://localhost:3000 --count 1`.
+- **Thruster is now installed by default** (`--skip-thruster` defaults to
+  `false`) and fronts Falcon in the Dockerfile, for HTTP/2, public asset
+  caching, X-Sendfile and compression. TLS stays off unless `TLS_DOMAIN` is set.
 - **Generated projects use Minitest instead of RSpec.** The surrounding tooling
   is unchanged: `factory_bot_rails`, `faker`, `shoulda-matchers`,
   `database_rewinder`, `simplecov` and `simplecov-cobertura`. `shoulda-context`

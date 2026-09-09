@@ -25,7 +25,7 @@ module Bankai
     class_option :skip_solid, type: :boolean, default: false,
                               desc: 'Skip Solid Queue/Cache/Cable setup'
 
-    class_option :skip_thruster, type: :boolean, default: true,
+    class_option :skip_thruster, type: :boolean, default: false,
                                  desc: 'Skip Thruster setup'
 
     class_option :path, type: :string, default: nil,
