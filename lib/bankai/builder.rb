@@ -17,10 +17,12 @@ module Bankai
 
     def replace_gemfile(path)
       template 'Gemfile.erb', 'Gemfile', force: true do |content|
-        if path
-          content.gsub(/gem .bankai./) { |s| %(#{s}, path: "#{path}") }
-        else
-          content
+        next content unless path
+
+        # Replace the whole line: a path source and a version requirement
+        # cannot both be given.
+        content.sub(/^(\s*)gem 'bankai'.*$/) do
+          %(#{Regexp.last_match(1)}gem 'bankai', path: "#{path}")
         end
       end
     end

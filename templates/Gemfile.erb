@@ -70,7 +70,7 @@ group :development, :test do
   gem 'simplecov-cobertura', require: false
 <%- end -%>
 
-  gem 'bankai'
+  gem 'bankai', '~> <%= Bankai::VERSION.split('.').first(2).join('.') %>'
   gem 'oj'
 end
 <% end -%>

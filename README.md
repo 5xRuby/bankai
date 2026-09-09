@@ -20,8 +20,11 @@ bankai projectname
 ## Requirement
 
 * Ruby >= 3.2.0
-* `~> 0.13` required `rails >= 7.0` (tested up to Rails 8.1)
+* `>= 1.0` requires `rails >= 8.0` (tested against Rails 8.0 and 8.1)
+* `~> 0.13` required `rails >= 7.0`
 * `<= 0.12` required `rails >= 5.2`
+
+See [CHANGELOG.md](CHANGELOG.md) for what changed in 1.0.
 
 ## Gemfile
 
@@ -65,11 +68,27 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ### Test Gem
 
-If you want to test the changes for generator is works well, you can add `--path` options to use your local version
+To try your local changes, run `exe/bankai` straight out of the checkout and
+point `--path` at that same checkout:
 
 ```
-bankai projectname --path=YOUR_LOCAL_GEM_PATH
+cd /somewhere/else
+ruby /path/to/bankai/exe/bankai projectname --path=/path/to/bankai
 ```
+
+Both parts matter, and they do different things:
+
+* which `exe/bankai` you run decides whose `lib/` and `templates/` generate the app
+* `--path` decides which bankai the **generated app** bundles, and therefore
+  which version runs the `bankai:*` sub-generators (testing, ci, lint, ...)
+
+Without `--path` the generated Gemfile asks for the released
+`gem 'bankai', '~> <major>.<minor>'`, so an unreleased version fails at
+`bundle install` rather than silently running an older gem's sub-generators.
+
+Do not run this from inside the bankai repo, and do not set `BUNDLE_GEMFILE` —
+the generated app's `bundle install` would then resolve against bankai's own
+Gemfile.
 
 ## Contributing
 
